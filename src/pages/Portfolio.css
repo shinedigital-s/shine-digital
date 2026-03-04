@@ -1,0 +1,374 @@
+/* Portfolio Hero */
+.pf-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10rem 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.pf-hero.revealed { opacity: 1; transform: translateY(0); }
+
+.pf-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(242, 242, 240, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(242, 242, 240, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.pf-hero-inner { position: relative; z-index: 2; }
+
+.pf-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.pf-title {
+  font-size: clamp(5rem, 15vw, 15rem);
+  line-height: 0.88;
+}
+
+.pf-title-accent {
+  background: linear-gradient(135deg, var(--white), var(--grey-text));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pf-title-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(245,245,240,0.4);
+}
+
+.pf-hero-sub {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: rgba(245,245,240,0.35);
+  letter-spacing: 0.08em;
+  margin-top: 2rem;
+}
+
+/* ===================== STICKY CARDS ===================== */
+.pf-sticky-section {
+  height: 550vh;
+  position: relative;
+}
+
+.pf-sticky-inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pf-progress-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.06);
+  z-index: 20;
+}
+
+.pf-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--white), var(--grey-text));
+  transition: width 0.1s linear;
+}
+
+.pf-cards-viewport {
+  overflow: hidden;
+  padding: 0 3rem;
+}
+
+.pf-cards-track {
+  display: flex;
+  gap: 2rem;
+  will-change: transform;
+  transition: transform 0.05s linear;
+  align-items: center;
+}
+
+.pf-card {
+  flex-shrink: 0;
+  width: min(500px, 85vw);
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.pf-card:hover { border-color: rgba(242, 242, 240, 0.08); }
+
+.pf-card-visual {
+  aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-card-visual-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(59,91,219,0.06), rgba(121,80,242,0.06));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-card-visual-num {
+  font-family: var(--font-display);
+  font-size: 8rem;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+  user-select: none;
+}
+
+.pf-card-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(59,91,219,0.7), rgba(121,80,242,0.7));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--white);
+  letter-spacing: 0.2em;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pf-card:hover .pf-card-hover-overlay { opacity: 1; }
+
+.pf-card-info {
+  padding: 1.5rem 2rem 2rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.pf-card-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.pf-card-cat {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+}
+
+.pf-card-year {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(245,245,240,0.3);
+}
+
+.pf-card-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.pf-card-desc {
+  font-size: 0.78rem;
+  color: rgba(245,245,240,0.5);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.pf-card-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.pf-tag-pill {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(242, 242, 240, 0.06);
+  color: rgba(116, 192, 252, 0.7);
+  border-radius: 1px;
+}
+
+/* End CTA card */
+.pf-card--end {
+  background: linear-gradient(135deg, rgba(59,91,219,0.12), rgba(121,80,242,0.12));
+  border-color: var(--grey-text);
+  aspect-ratio: unset;
+  height: min(400px, 60vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pf-card-end-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  padding: 3rem;
+}
+
+.pf-end-num {
+  font-size: 3rem;
+  color: var(--grey-text);
+}
+
+.pf-card-end-inner h3 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.btn-pf {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--grey-text);
+  border: 1px solid var(--grey-text);
+  padding: 0.7rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-pf:hover {
+  background: var(--grey-text);
+  color: var(--white);
+}
+
+.pf-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,245,240,0.2);
+}
+
+/* Stats */
+.pf-stats-section {
+  padding: 8rem 3rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.pf-stats-section.revealed { opacity: 1; transform: translateY(0); }
+
+.pf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pf-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: border-color 0.3s ease;
+}
+
+.pf-stat-item:hover { border-color: var(--grey-text); }
+
+.pf-stat-num {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, var(--white), var(--grey-text));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pf-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,245,240,0.4);
+}
+
+/* page-footer shared */
+.page-footer {
+  padding: 5rem 3rem 3rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.pf-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3rem;
+}
+
+.pf-cta { font-size: clamp(2rem, 4vw, 4rem); line-height: 1.1; }
+.pf-cta a { text-decoration: none; }
+
+.pf-links { display: flex; flex-direction: column; gap: 1rem; text-align: right; }
+
+.pf-links a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,245,240,0.4);
+  transition: color 0.3s ease;
+}
+
+.pf-links a:hover { color: var(--white); }
+
+.pf-copy {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(245,245,240,0.2);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--white), var(--grey-text));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (max-width: 768px) {
+  .pf-hero { padding: 7rem 1.5rem 4rem; }
+  .pf-cards-viewport { padding: 0 1.5rem; }
+  .pf-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .pf-stats-section { padding: 5rem 1.5rem; }
+  .page-footer { padding: 4rem 1.5rem 2rem; }
+  .pf-inner { flex-direction: column; align-items: flex-start; gap: 2rem; }
+  .pf-links { text-align: left; }
+}
