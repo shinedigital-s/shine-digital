@@ -2,377 +2,417 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Home.css'
 
-/* ─── data ──────────────────────────────────────────────────────── */
-const SERVICES = [
-  { num: '01', name: 'Brand Strategy',    desc: 'Identity systems, positioning, and narratives engineered to dominate.' },
-  { num: '02', name: 'Digital Marketing', desc: 'Full-funnel campaigns built for measurable, scalable growth.' },
-  { num: '03', name: 'Content Creation',  desc: 'Video, photo, copy — content that actually lands.' },
-  { num: '04', name: 'Performance Ads',   desc: 'Data-driven paid media optimised for ROI at every rupee.' },
-  { num: '05', name: 'Social Media',      desc: 'Platform-native strategy and community that drives real loyalty.' },
-  { num: '06', name: 'Web Design',        desc: 'Experiences as functional as they are unforgettable.' },
-  { num: '07', name: 'Creative Direction','desc': 'Big-picture vision for campaigns, launches, and rebrands.' },
-]
-
-/* Portfolio: each has a gradient pair for bg (all grey tones) */
-const PORTFOLIO = [
-  { num: '01', title: 'Velocity Rebrand',    cat: 'Brand Identity',   year: '2024', desc: 'Full rebrand transforming Velocity Sports from dated to dominant.', grad: ['#080808','#141414'] },
-  { num: '02', title: 'NexGen Launch',       cat: 'Digital Campaign', year: '2024', desc: '360° launch campaign — 2.3M impressions in two weeks.',            grad: ['#111111','#1e1e1e'] },
-  { num: '03', title: 'Pulse Community',     cat: 'Social Media',     year: '2023', desc: '100K+ community built from zero through strategic content.',        grad: ['#080808','#0d0d0d'] },
-  { num: '04', title: 'Echo Web Experience', cat: 'Web Design',       year: '2023', desc: 'Award-winning website. Conversions up 340%.',                      grad: ['#141414','#222222'] },
-  { num: '05', title: 'Flux Performance',    cat: 'Paid Media',       year: '2023', desc: 'ROAS scaled from 1.8× to 5.2× through iterative optimisation.',    grad: ['#080808','#181818'] },
-]
-
-/* ─── hooks ─────────────────────────────────────────────────────── */
-function useLenis(onScrollCb) {
+/* ─── Lenis ─────────────────────────────────────────────── */
+function useLenis(cb) {
   useEffect(() => {
     let lenis
     import('lenis').then(({ default: Lenis }) => {
-      lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+      lenis = new Lenis({ lerp: 0.08, smoothWheel: true })
       const raf = t => { lenis.raf(t); requestAnimationFrame(raf) }
       requestAnimationFrame(raf)
-      if (onScrollCb) lenis.on('scroll', onScrollCb)
+      if (cb) lenis.on('scroll', cb)
     })
     return () => lenis?.destroy()
   }, [])
 }
 
+/* ─── Scroll reveal ─────────────────────────────────────── */
 function useReveal() {
   useEffect(() => {
     const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target) } }),
-      { threshold: 0.1 }
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target) }
+      }),
+      { threshold: 0.08 }
     )
     document.querySelectorAll('[data-r]').forEach(el => obs.observe(el))
     return () => obs.disconnect()
   }, [])
 }
 
-/* ─── component ─────────────────────────────────────────────────── */
+/* ─── Data ──────────────────────────────────────────────── */
+const SERVICES = [
+  {
+    num: '01',
+    title: 'Website Design and Development',
+    lead: 'Your website is often the first impression people have of your business. We design clean, modern websites that communicate your brand clearly and guide visitors toward action.',
+    items: ['Business websites', 'E-commerce websites', 'Landing pages', 'Website redesign', 'Website support and maintenance'],
+  },
+  {
+    num: '02',
+    title: 'Search Engine Optimization',
+    lead: 'Search visibility plays a key role in digital growth. Our SEO strategies help businesses appear in front of the right audience when they search for relevant products or services.',
+    items: ['Keyword research', 'On page optimization', 'Technical SEO', 'Local SEO', 'Content improvement'],
+  },
+  {
+    num: '03',
+    title: 'Digital Marketing',
+    lead: 'We create marketing campaigns that help brands connect with the right audience. Our focus is on meaningful engagement and measurable business outcomes.',
+    items: ['Social media marketing', 'Google advertising', 'Content marketing', 'Performance marketing', 'Lead generation campaigns'],
+  },
+  {
+    num: '04',
+    title: 'Branding and Creative',
+    lead: 'A strong brand helps people remember you and trust your business. We work closely with clients to develop brand identities that reflect their values and vision.',
+    items: ['Logo design', 'Brand identity', 'Creative direction', 'Visual communication', 'Campaign design'],
+  },
+]
+
+const WHY = [
+  { title: 'Thoughtful Strategy', body: 'Every project begins with understanding your business and your goals.' },
+  { title: 'Creative Execution', body: 'Our work combines clear thinking with creative ideas that stand out.' },
+  { title: 'Focus On Growth', body: 'The goal is always to support your business growth through digital.' },
+  { title: 'Collaborative Process', body: 'We work closely with our clients and treat every project as a partnership.' },
+]
+
+const PROCESS = [
+  { num: '01', title: 'Understanding', body: 'We begin by learning about your business, your audience, and your objectives.' },
+  { num: '02', title: 'Planning', body: 'A clear strategy is developed to guide the project.' },
+  { num: '03', title: 'Creating', body: 'Our team designs, develops, and builds your digital presence.' },
+  { num: '04', title: 'Improving', body: 'We review performance and continuously improve results.' },
+]
+
+/* ─── Intro overlay ──────────────────────────────────────── */
+const INTRO_SEGMENTS = [
+  { text: 'Digital That Helps Your Business Grow', type: 'headline' },
+  { text: '\n\nAt Shine Digital, we help brands build a strong online presence through thoughtful design, smart marketing, and clear strategy. From websites to digital campaigns, our focus is simple — help your business attract the right audience and turn attention into real customers.\n\nLet\'s build something meaningful for your brand.', type: 'body' },
+]
+
+const FULL_TEXT = INTRO_SEGMENTS.map(s => s.text).join('')
+
+function IntroOverlay({ onDone }) {
+  const [charCount, setCharCount] = useState(0)
+  const [phase, setPhase] = useState('typing')
+  const timerRef = useRef(null)
+
+  const getSpeed = (idx) => {
+    const headlineLen = INTRO_SEGMENTS[0].text.length
+    return idx < headlineLen ? 55 : 38
+  }
+
+  useEffect(() => {
+    if (phase !== 'typing') return
+    let i = 0
+    const tick = () => {
+      if (i < FULL_TEXT.length) {
+        i++
+        setCharCount(i)
+        timerRef.current = setTimeout(tick, getSpeed(i))
+      } else {
+        timerRef.current = setTimeout(() => setPhase('fading'), 1800)
+      }
+    }
+    timerRef.current = setTimeout(tick, 600)
+    return () => clearTimeout(timerRef.current)
+  }, [phase])
+
+  useEffect(() => {
+    if (phase === 'fading') {
+      timerRef.current = setTimeout(() => setPhase('cta'), 950)
+    }
+    return () => clearTimeout(timerRef.current)
+  }, [phase])
+
+  const headlineLen = INTRO_SEGMENTS[0].text.length
+  const displayedFull = FULL_TEXT.slice(0, charCount)
+  const displayedHeadline = displayedFull.slice(0, Math.min(charCount, headlineLen))
+  const displayedBody = charCount > headlineLen ? displayedFull.slice(headlineLen) : ''
+
+  return (
+    <div className={`intro-overlay${phase === 'fading' ? ' io-fading' : ''}${phase === 'cta' ? ' io-cta-phase' : ''}`}>
+      {phase !== 'cta' && (
+        <div className="io-text-wrap">
+          <p className="io-headline">
+            {displayedHeadline}
+            {charCount <= headlineLen && <span className="io-cursor" />}
+          </p>
+          {displayedBody.length > 0 && (
+            <p className="io-body">
+              {displayedBody.split('\n').map((line, i) => (
+                <React.Fragment key={i}>
+                  {line}
+                  {i < displayedBody.split('\n').length - 1 && <br />}
+                </React.Fragment>
+              ))}
+              {charCount > headlineLen && phase === 'typing' && <span className="io-cursor" />}
+            </p>
+          )}
+        </div>
+      )}
+      {phase === 'cta' && (
+        <div className="io-cta-wrap">
+          <p className="io-cta-label">Ready to get started?</p>
+          <div className="io-cta-buttons">
+            <Link to="/join-us" className="io-btn io-btn--primary" onClick={onDone}>
+              Start Your Project
+            </Link>
+            <button className="io-btn io-btn--ghost" onClick={onDone}>
+              Explore the Site
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ─── Pull quote ─────────────────────────────────────────── */
+const QUOTES = [
+  'We turn digital presence into business growth.',
+  'Strategy first. Creativity always.',
+  'Your audience is out there. We help you reach them.',
+]
+
+function AboutPullQuote() {
+  const [idx, setIdx] = useState(0)
+  const [fading, setFading] = useState(false)
+
+  const cycle = () => {
+    setFading(true)
+    setTimeout(() => {
+      setIdx(i => (i + 1) % QUOTES.length)
+      setFading(false)
+    }, 300)
+  }
+
+  return (
+    <div className="pull-quote-wrap" onMouseEnter={cycle}>
+      <span className="pull-quote-mark">"</span>
+      <p className={`pull-quote-text${fading ? ' pq-fade' : ''}`}>{QUOTES[idx]}</p>
+      <span className="pull-quote-hint">hover to see more</span>
+    </div>
+  )
+}
+
+/* ─── Main component ─────────────────────────────────────── */
 export default function Home() {
-  const heroTitleRef   = useRef(null)
-  const pfWrapRef      = useRef(null)
-  const pfLeftRef      = useRef(null)
-  const pfRightRef     = useRef(null)
-  const pfProgressRef  = useRef(null)
-  const [pfIdx, setPfIdx] = useState(0)
+  const heroWordRef = useRef(null)
+  const [activeService, setActiveService] = useState(0)
+  const [introDone, setIntroDone] = useState(false)
 
   useReveal()
+  useLenis()
 
-  /* hero parallax on native scroll (before lenis init) */
   useEffect(() => {
     const fn = () => {
-      if (heroTitleRef.current)
-        heroTitleRef.current.style.transform = `translateY(${window.scrollY * 0.22}px)`
+      if (heroWordRef.current)
+        heroWordRef.current.style.transform = `translateY(${window.scrollY * 0.18}px)`
     }
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
-  useLenis(({ scroll }) => {
-    /* ── portfolio sticky ── */
-    const wrap = pfWrapRef.current
-    if (wrap) {
-      const rect      = wrap.getBoundingClientRect()
-      const total     = wrap.offsetHeight - window.innerHeight
-      const prog      = Math.max(0, Math.min(1, -rect.top / total))
-      const rawIdx    = prog * (PORTFOLIO.length - 1)
-      const idx       = Math.min(PORTFOLIO.length - 1, Math.floor(prog * PORTFOLIO.length))
-      setPfIdx(idx)
-
-      /* move progress bar inside right pane */
-      if (pfProgressRef.current)
-        pfProgressRef.current.style.width = `${prog * 100}%`
-    }
-  })
-
-  const cur  = PORTFOLIO[pfIdx]
-  const next = PORTFOLIO[Math.min(pfIdx + 1, PORTFOLIO.length - 1)]
-
   return (
-    <div className="home">
+    <>
+      {!introDone && <IntroOverlay onDone={() => setIntroDone(true)} />}
 
-      {/* ═══════════════════════════════════ HERO ══════════════════════════════ */}
-      <section className="hero">
-        {/* Three vertical photo-like panels — real dark image feel */}
-        <div className="hero-panels">
-          <div className="hero-panel hp--l" />
-          <div className="hero-panel hp--c" />
-          <div className="hero-panel hp--r" />
-        </div>
-        <div className="hero-overlay" />
+      <div className={`home ${introDone ? 'home-visible' : 'home-hidden'}`}>
 
-        {/* Top-left meta (like Move. magazine) */}
-        <div className="hero-tl">
-          <span>Est. 2020</span>
-          <span>Mumbai, India</span>
-          <span>Creative Agency</span>
-        </div>
-
-        <div className="hero-tr">
-          <span>shinedigital.in</span>
-        </div>
-
-        {/* Giant centred title */}
-        <div className="hero-title-wrap" ref={heroTitleRef}>
-          <h1 className="hero-title">
-            <span className="ht-l1">SHINE</span>
-            <span className="ht-l2">DIGITAL</span>
-            <span className="ht-dot">.</span>
-          </h1>
-        </div>
-
-        {/* Bottom-left tagline */}
-        <div className="hero-bl">
-          <p>marketing<br/>that moves.</p>
-        </div>
-
-        {/* Bottom-right quote + buttons */}
-        <div className="hero-br">
-          <em className="hero-quote">
-            let your brand speak louder<br/>than the noise around it.
-          </em>
-          <div className="hero-btns">
-            <Link to="/services" className="hbtn hbtn--fill">Services</Link>
-            <Link to="/portfolio" className="hbtn hbtn--ghost">Portfolio</Link>
+        {/* ══════ HERO ═══════════════════════════════════════════════════════ */}
+        <section className="hero">
+          <div className="hero-bg">
+            <div className="hbg-panel hbg-l" />
+            <div className="hbg-panel hbg-c" />
+            <div className="hbg-panel hbg-r" />
           </div>
-        </div>
+          <div className="hero-overlay" />
 
-        {/* Divider strips */}
-        <div className="hero-strips">
-          <div /><div /><div />
-        </div>
-
-        <div className="hero-scr">
-          <span>scroll</span>
-          <div className="hero-scr-line" />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════ ABOUT ═════════════════════════════ */}
-      <section className="about">
-        <div className="about-head" data-r>
-          <p className="sec-label">About Us</p>
-          <h2 className="about-h">
-            We build brands<br/>that can't be<br/><em>ignored.</em>
-          </h2>
-        </div>
-        <div className="about-body" data-r>
-          <p>Shine Digital is a youth-led creative marketing agency from Mumbai. We exist at the intersection of strategy, culture, and craft — building brands that speak to the next generation.</p>
-          <p>Every campaign we run, every brand we build — engineered to perform. No fluff. No filler. Just work that shines.</p>
-        </div>
-
-        {/* Founders — 9:16 portrait ratio */}
-        <div className="founders" data-r>
-          <div className="founder">
-            <div className="founder-img">
-              <div className="founder-placeholder"><span>S</span></div>
-            </div>
-            <div className="founder-info">
-              <h3 className="founder-name">Savin Tuscano</h3>
-              <span className="founder-role">Co-Founder & Creative Director</span>
-              <p className="founder-bio">Savin leads creative strategy, bringing a sharp eye for brand and an instinct for what resonates with modern audiences.</p>
-            </div>
+          <div className="hero-title-block" ref={heroWordRef}>
+            <span className="ht-shine">SHINE</span>
+            <span className="ht-digital">DIGITAL</span>
           </div>
-          <div className="founder">
-            <div className="founder-img">
-              <div className="founder-placeholder"><span>K</span></div>
-            </div>
-            <div className="founder-info">
-              <h3 className="founder-name">Krisha Mehta</h3>
-              <span className="founder-role">Co-Founder & Strategy Lead</span>
-              <p className="founder-bio">Krisha drives growth strategy and client relationships, ensuring every brand achieves tangible, measurable results.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ═══════════════════════════════════ SERVICES ══════════════════════════ */}
-      {/* Diagonal stacked cards — each drops on top of the previous */}
-      <section className="services-section">
-        <div className="svc-header" data-r>
-          <p className="sec-label">What We Do</p>
-          <h2 className="svc-main-title">OUR<br/><span className="svc-title-ghost">SERVICES</span></h2>
-        </div>
-
-        <div className="svc-stack">
-          {SERVICES.map((s, i) => (
-            <div
-              key={i}
-              className="svc-stack-card"
-              style={{ '--i': i, '--total': SERVICES.length }}
-              data-r
-            >
-              <span className="ssc-num">{s.num}</span>
-              <h3 className="ssc-name">{s.name}</h3>
-              <p className="ssc-desc">{s.desc}</p>
-              <div className="ssc-bar" />
-            </div>
-          ))}
-          {/* CTA card at end */}
-          <div className="svc-stack-card svc-cta-card" style={{ '--i': SERVICES.length }} data-r>
-            <span className="ssc-num">↗</span>
-            <h3 className="ssc-name">Start a Project</h3>
-            <p className="ssc-desc">Ready to build something that actually matters?</p>
-            <Link to="/join-us" className="ssc-link">Get in touch</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════ BLOG ══════════════════════════════ */}
-      <section className="blog-tease" data-r>
-        <p className="sec-label">Blog</p>
-        <h2 className="bt-title">THOUGHTS<br/><span className="bt-ghost">INCOMING.</span></h2>
-        <p className="bt-sub">We're writing things worth reading. Check back soon.</p>
-        <Link to="/blog" className="txt-link">Visit Blog →</Link>
-      </section>
-
-      {/* ═══════════════════════════════════ PORTFOLIO ═════════════════════════ */}
-      {/* Left stays sticky. Right content + background changes smoothly with scroll */}
-      <section className="pf-wrap" ref={pfWrapRef}
-        style={{ height: `${(PORTFOLIO.length + 1) * 100}vh` }}>
-
-        <div className="pf-sticky">
-          {/* LEFT — completely static */}
-          <div className="pf-left" ref={pfLeftRef}>
-            <p className="sec-label">Selected Work</p>
-            <h2 className="pf-title">SELECTED<br/>WORK.</h2>
-            <div className="pf-dots">
-              {PORTFOLIO.map((_, i) => (
-                <div key={i} className={`pf-dot ${pfIdx === i ? 'active' : ''}`} />
-              ))}
-            </div>
-            <div className="pf-counter">
-              <span className="pf-cur">{String(pfIdx + 1).padStart(2,'0')}</span>
-              <span className="pf-sep"> / </span>
-              <span className="pf-tot">{String(PORTFOLIO.length).padStart(2,'0')}</span>
+          <div className="hero-bottom">
+            <p className="hero-sub">Marketing that moves.</p>
+            <div className="hero-actions">
+              <Link to="/join-us" className="btn-primary">Start Your Project</Link>
+              <Link to="/services" className="btn-ghost">Our Services</Link>
             </div>
           </div>
 
-          {/* RIGHT — transitions smoothly */}
-          <div className="pf-right" ref={pfRightRef}>
-            {/* Gradient background — each project gets a slightly different dark tone */}
-            <div
-              className="pf-bg"
-              style={{
-                background: `linear-gradient(160deg, ${cur.grad[0]} 0%, ${cur.grad[1]} 100%)`
-              }}
-            />
+          <div className="hero-quote-corner">
+            <em>let your brand speak louder<br />than the noise around it.</em>
+          </div>
 
-            {/* Progress bar along top of right pane */}
-            <div className="pf-prog-track">
-              <div className="pf-prog-fill" ref={pfProgressRef} />
+          <div className="hero-lines"><div /><div /><div /></div>
+
+          <div className="hero-scroll-indicator">
+            <span>scroll</span>
+            <div className="hsi-line" />
+          </div>
+        </section>
+
+        {/* ══════ ABOUT ══════════════════════════════════════════════════════ */}
+        <section className="about-section">
+
+          <div className="about-grid">
+            <div className="about-left" data-r>
+              <p className="eyebrow">About Us</p>
+              <h2 className="about-h2">
+                A Digital<br />Partner<br />For Growing<br />Businesses
+              </h2>
             </div>
 
-            {/* Large ghost number */}
-            <div className="pf-ghost-num">{cur.num}</div>
-
-            {/* Project info */}
-            <div className="pf-info">
-              <div className="pf-meta">
-                <span className="pf-cat">{cur.cat}</span>
-                <span className="pf-year">{cur.year}</span>
+            <div className="about-right" data-r style={{ '--delay': '0.12s' }}>
+              <AboutPullQuote />
+              <div className="about-body">
+                <p>Shine Digital works with businesses that want to grow online in a practical and sustainable way. Our approach combines creativity with clear thinking so every project delivers real value.</p>
+                <p>We believe digital success comes from understanding your audience, creating the right message, and presenting it in a way that builds trust. Whether it is a website, a brand identity, or a marketing campaign, everything we create is designed to support your long term growth.</p>
+                <Link to="/join-us" className="about-cta">Work With Us →</Link>
               </div>
-              <h3 className="pf-proj-title">{cur.title}</h3>
-              <p className="pf-proj-desc">{cur.desc}</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══════════════════════════════════ JOIN US ═══════════════════════════ */}
-      <JoinUsSection />
-
-      {/* ═══════════════════════════════════ FOOTER ════════════════════════════ */}
-      <footer className="footer">
-        <div className="ft-top">
-          <div className="ft-logo">SHINE<span>DIGITAL</span>.</div>
-          <nav className="ft-nav">
-            <Link to="/services">Services</Link>
-            <Link to="/portfolio">Portfolio</Link>
-            <Link to="/blog">Blog</Link>
-            <Link to="/join-us">Join Us</Link>
-          </nav>
-        </div>
-        <div className="ft-mid">
-          {[
-            { l: 'Email',    v: 'hello@shinedigital.in',   href: 'mailto:hello@shinedigital.in' },
-            { l: 'Phone',    v: '+91 XX XXXX XXXX',         href: 'tel:+91XXXXXXXXXX' },
-            { l: 'Location', v: 'Mumbai, Maharashtra, India' },
-          ].map(b => (
-            <div key={b.l} className="ft-block">
-              <span className="ft-block-label">{b.l}</span>
-              {b.href
-                ? <a href={b.href}>{b.v}</a>
-                : <span>{b.v}</span>
-              }
-            </div>
-          ))}
-          <div className="ft-block">
-            <span className="ft-block-label">Follow</span>
-            {['Instagram','LinkedIn','Twitter','Behance'].map(s => (
-              <a key={s} href="#" className="ft-social">{s}</a>
-            ))}
-          </div>
-        </div>
-        <div className="ft-bottom">
-          <span>© 2025 Shine Digital. All rights reserved.</span>
-          <span>Made in Mumbai ✦</span>
-        </div>
-      </footer>
-    </div>
-  )
-}
-
-/* ─── Join Us inline ─────────────────────────────────────────────── */
-function JoinUsSection() {
-  const [form, setForm] = useState({ name:'', email:'', message:'' })
-  const [sent, setSent] = useState(false)
-  const chg = e => setForm({ ...form, [e.target.name]: e.target.value })
-  const sub = e => {
-    e.preventDefault()
-    window.location.href = `mailto:hello@shinedigital.in?subject=New Inquiry from ${form.name}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`
-    setSent(true)
-  }
-  return (
-    <section className="joinus" data-r>
-      <div className="ju-wrap">
-        <div className="ju-l">
-          <p className="sec-label">Work With Us</p>
-          <h2 className="ju-heading">LET'S<br/>BUILD<br/>TOGETHER.</h2>
-          <a href="mailto:hello@shinedigital.in" className="ju-email">hello@shinedigital.in</a>
-          <div className="ju-socials">
-            {['Instagram ↗','LinkedIn ↗','Twitter ↗','Behance ↗'].map(s => (
-              <a key={s} href="#" className="ju-social">{s}</a>
-            ))}
-          </div>
-        </div>
-        <div className="ju-r">
-          {sent ? (
-            <div className="ju-sent">
-              <span>✦</span>
-              <h3>Message sent.</h3>
-              <p>We'll be in touch within 24 hours.</p>
-            </div>
-          ) : (
-            <form onSubmit={sub} className="ju-form">
-              {[
-                { n:'name',    t:'text',  p:'What should we call you?', l:'Name' },
-                { n:'email',   t:'email', p:'your@email.com',           l:'Email' },
-              ].map(f => (
-                <div key={f.n} className="ju-field">
-                  <label>{f.l}</label>
-                  <input type={f.t} name={f.n} value={form[f.n]} onChange={chg} placeholder={f.p} required />
+          <div className="founders-row" data-r style={{ '--delay': '0.2s' }}>
+            {[
+              { initial: 'S', name: 'Savin Tuscano', title: 'Co-Founder & Creative Director', bio: 'Savin leads creative strategy with a sharp eye for brand and an instinct for what resonates with modern audiences.' },
+              { initial: 'K', name: 'Krisha Mehta', title: 'Co-Founder & Strategy Lead', bio: 'Krisha drives growth strategy and client relationships, ensuring every brand achieves tangible, measurable results.' },
+            ].map((f, i) => (
+              <div key={i} className="founder-card">
+                <div className="founder-portrait">
+                  <span className="founder-initial">{f.initial}</span>
+                  <div className="founder-portrait-overlay" />
                 </div>
-              ))}
-              <div className="ju-field">
-                <label>Project</label>
-                <textarea name="message" value={form.message} onChange={chg} rows="5" placeholder="What are you building?" required />
+                <div className="founder-info">
+                  <div className="founder-meta">
+                    <h3 className="founder-name">{f.name}</h3>
+                    <span className="founder-role">{f.title}</span>
+                  </div>
+                  <p className="founder-bio">{f.bio}</p>
+                </div>
               </div>
-              <button type="submit" className="ju-submit">Send it →</button>
-            </form>
-          )}
-        </div>
+            ))}
+          </div>
+
+        </section>
+
+        {/* ══════ SERVICES ═══════════════════════════════════════════════════ */}
+        <section className="services-section">
+          <div className="svc-section-head" data-r>
+            <p className="eyebrow">What We Do</p>
+            <h2 className="svc-section-h2">Our Services</h2>
+          </div>
+          <div className="svc-list">
+            {SERVICES.map((s, i) => (
+              <div
+                key={i}
+                className={`svc-item ${activeService === i ? 'open' : ''}`}
+                onClick={() => setActiveService(activeService === i ? -1 : i)}
+                data-r
+                style={{ '--delay': `${i * 0.08}s` }}
+              >
+                <div className="svc-item-head">
+                  <span className="svc-num">{s.num}</span>
+                  <h3 className="svc-title">{s.title}</h3>
+                  <span className="svc-toggle">{activeService === i ? '−' : '+'}</span>
+                </div>
+                <div className="svc-item-body">
+                  <div>
+                    <p className="svc-lead">{s.lead}</p>
+                    <div className="svc-items-grid">
+                      {s.items.map((item, j) => (
+                        <span key={j} className="svc-tag">{item}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ WHY US ═════════════════════════════════════════════════════ */}
+        <section className="why-section">
+          <div className="why-head" data-r>
+            <p className="eyebrow">Why Work With Shine Digital</p>
+            <h2 className="why-h2">What Sets<br />Us Apart</h2>
+          </div>
+          <div className="why-grid">
+            {WHY.map((w, i) => (
+              <div key={i} className="why-card" data-r style={{ '--delay': `${i * 0.1}s` }}>
+                <span className="why-num">0{i + 1}</span>
+                <h3 className="why-title">{w.title}</h3>
+                <p className="why-body">{w.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ PROCESS ════════════════════════════════════════════════════ */}
+        <section className="process-section">
+          <div className="process-head" data-r>
+            <p className="eyebrow">How We Work</p>
+            <h2 className="process-h2">Our Process</h2>
+          </div>
+          <div className="process-steps">
+            {PROCESS.map((p, i) => (
+              <div key={i} className="process-step" data-r style={{ '--delay': `${i * 0.1}s` }}>
+                <div className="ps-num">{p.num}</div>
+                <div className="ps-connector" />
+                <div className="ps-content">
+                  <h3 className="ps-title">{p.title}</h3>
+                  <p className="ps-body">{p.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══════ CLOSING CTA ════════════════════════════════════════════════ */}
+        <section className="closing-section" data-r>
+          <div className="closing-inner">
+            <p className="eyebrow">Let's Work Together</p>
+            <h2 className="closing-h2">Let's Build Your<br />Digital Presence</h2>
+            <p className="closing-body">
+              Every brand has a story worth sharing. With the right strategy and creative direction, that story can reach the right audience and create lasting impact. If you are looking to strengthen your digital presence, we would love to work with you.
+            </p>
+            <Link to="/join-us" className="btn-primary btn-large">Get in Touch</Link>
+          </div>
+          <div className="closing-deco">
+            <span className="cd-word">SHINE</span>
+            <span className="cd-word cd-ghost">DIGITAL</span>
+          </div>
+        </section>
+
+        {/* ══════ FOOTER ═════════════════════════════════════════════════════ */}
+        <footer className="footer">
+          <div className="ft-top">
+            <div className="ft-brand">
+              <div className="ft-logo">SHINE<span>DIGITAL</span>.</div>
+              <p className="ft-tagline">Marketing that moves.</p>
+            </div>
+            <div className="ft-cols">
+              <div className="ft-col">
+                <span className="ft-col-head">Navigate</span>
+                <Link to="/">Home</Link>
+                <Link to="/services">Services</Link>
+                <Link to="/portfolio">Portfolio</Link>
+                <Link to="/blog">Blog</Link>
+                <Link to="/join-us">Join Us</Link>
+              </div>
+              <div className="ft-col">
+                <span className="ft-col-head">Contact</span>
+                <a href="mailto:hello@shinedigital.in">hello@shinedigital.in</a>
+                <a href="tel:+91XXXXXXXXXX">+91 XX XXXX XXXX</a>
+                <span>Mumbai, Maharashtra</span>
+                <span>India</span>
+              </div>
+              <div className="ft-col">
+                <span className="ft-col-head">Follow</span>
+                <a href="#" target="_blank" rel="noreferrer">Instagram</a>
+                <a href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+                <a href="#" target="_blank" rel="noreferrer">Twitter</a>
+                <a href="#" target="_blank" rel="noreferrer">Behance</a>
+              </div>
+            </div>
+          </div>
+          <div className="ft-bottom">
+            <span>© 2025 Shine Digital. All rights reserved.</span>
+            <span>Made with care in Mumbai ✦</span>
+          </div>
+        </footer>
+
       </div>
-    </section>
+    </>
   )
 }
