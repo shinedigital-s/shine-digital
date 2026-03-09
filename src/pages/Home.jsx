@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './Home.css'
+import logo from '../components/assets/logo.png'
 
 /* ─── Lenis ─────────────────────────────────────────────── */
 function useLenis(cb) {
@@ -72,91 +73,68 @@ const PROCESS = [
   { num: '04', title: 'Improving', body: 'We review performance and continuously improve results.' },
 ]
 
-/* ─── Intro overlay ──────────────────────────────────────── */
-const INTRO_SEGMENTS = [
-  { text: 'Digital That Helps Your Business Grow', type: 'headline' },
-  { text: '\n\nAt Shine Digital, we help brands build a strong online presence through thoughtful design, smart marketing, and clear strategy. From websites to digital campaigns, our focus is simple — help your business attract the right audience and turn attention into real customers.\n\nLet\'s build something meaningful for your brand.', type: 'body' },
-]
-
-const FULL_TEXT = INTRO_SEGMENTS.map(s => s.text).join('')
+/* ─── Intro animation overlay ───────────────────────────── */
+// Phases: logo → typing → hold → fading → cta
+const TAGLINE = 'Marketing that moves.'
 
 function IntroOverlay({ onDone }) {
+  const [phase, setPhase] = useState('logo')   // logo | typing | fading | cta
   const [charCount, setCharCount] = useState(0)
-  const [phase, setPhase] = useState('typing')
   const timerRef = useRef(null)
 
-  const getSpeed = (idx) => {
-    const headlineLen = INTRO_SEGMENTS[0].text.length
-    return idx < headlineLen ? 55 : 38
-  }
+  // Phase: logo → after 1.4s start typing
+  useEffect(() => {
+    if (phase !== 'logo') return
+    timerRef.current = setTimeout(() => setPhase('typing'), 1400)
+    return () => clearTimeout(timerRef.current)
+  }, [phase])
 
+  // Phase: typing → hold → fade out → done (no CTA)
   useEffect(() => {
     if (phase !== 'typing') return
     let i = 0
     const tick = () => {
-      if (i < FULL_TEXT.length) {
+      if (i < TAGLINE.length) {
         i++
         setCharCount(i)
-        timerRef.current = setTimeout(tick, getSpeed(i))
+        timerRef.current = setTimeout(tick, 65)
       } else {
-        timerRef.current = setTimeout(() => setPhase('fading'), 1800)
+        timerRef.current = setTimeout(() => setPhase('fading'), 1200)
       }
     }
-    timerRef.current = setTimeout(tick, 600)
+    timerRef.current = setTimeout(tick, 200)
     return () => clearTimeout(timerRef.current)
   }, [phase])
 
+  // Phase: fading → call onDone to reveal home
   useEffect(() => {
-    if (phase === 'fading') {
-      timerRef.current = setTimeout(() => setPhase('cta'), 950)
-    }
+    if (phase !== 'fading') return
+    timerRef.current = setTimeout(() => onDone(), 950)
     return () => clearTimeout(timerRef.current)
   }, [phase])
-
-  const headlineLen = INTRO_SEGMENTS[0].text.length
-  const displayedFull = FULL_TEXT.slice(0, charCount)
-  const displayedHeadline = displayedFull.slice(0, Math.min(charCount, headlineLen))
-  const displayedBody = charCount > headlineLen ? displayedFull.slice(headlineLen) : ''
 
   return (
-    <div className={`intro-overlay${phase === 'fading' ? ' io-fading' : ''}${phase === 'cta' ? ' io-cta-phase' : ''}`}>
-      {phase !== 'cta' && (
-        <div className="io-text-wrap">
-          <p className="io-headline">
-            {displayedHeadline}
-            {charCount <= headlineLen && <span className="io-cursor" />}
+    <div className={`intro-overlay${phase === 'fading' ? ' io-fading' : ''}`}>
+      <div className="io-logo-wrap">
+        {/* Logo animates in */}
+        <div className="io-logo-mark">
+          <img src={logo} alt="Shine Digital" className="io-logo-img" />
+        </div>
+
+        {/* Tagline types in beneath logo */}
+        {(phase === 'typing' || phase === 'fading') && (
+          <p className="io-tagline">
+            {TAGLINE.slice(0, charCount)}
+            {phase === 'typing' && <span className="io-cursor" />}
           </p>
-          {displayedBody.length > 0 && (
-            <p className="io-body">
-              {displayedBody.split('\n').map((line, i) => (
-                <React.Fragment key={i}>
-                  {line}
-                  {i < displayedBody.split('\n').length - 1 && <br />}
-                </React.Fragment>
-              ))}
-              {charCount > headlineLen && phase === 'typing' && <span className="io-cursor" />}
-            </p>
-          )}
-        </div>
-      )}
-      {phase === 'cta' && (
-        <div className="io-cta-wrap">
-          <p className="io-cta-label">Ready to get started?</p>
-          <div className="io-cta-buttons">
-            <Link to="/join-us" className="io-btn io-btn--primary" onClick={onDone}>
-              Start Your Project
-            </Link>
-            <button className="io-btn io-btn--ghost" onClick={onDone}>
-              Explore the Site
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
 
-/* ─── Pull quote ─────────────────────────────────────────── */
+
+/* ─── Pull quote component ──────────────────────────── */
 const QUOTES = [
   'We turn digital presence into business growth.',
   'Strategy first. Creativity always.',
@@ -178,13 +156,15 @@ function AboutPullQuote() {
   return (
     <div className="pull-quote-wrap" onMouseEnter={cycle}>
       <span className="pull-quote-mark">"</span>
-      <p className={`pull-quote-text${fading ? ' pq-fade' : ''}`}>{QUOTES[idx]}</p>
+      <p className={`pull-quote-text ${fading ? 'pq-fade' : ''}`}>
+        {QUOTES[idx]}
+      </p>
       <span className="pull-quote-hint">hover to see more</span>
     </div>
   )
 }
 
-/* ─── Main component ─────────────────────────────────────── */
+/* ─── Main Component ─────────────────────────────────────── */
 export default function Home() {
   const heroWordRef = useRef(null)
   const [activeService, setActiveService] = useState(0)
@@ -204,11 +184,12 @@ export default function Home() {
 
   return (
     <>
+      {/* Intro overlay — shown until dismissed */}
       {!introDone && <IntroOverlay onDone={() => setIntroDone(true)} />}
 
       <div className={`home ${introDone ? 'home-visible' : 'home-hidden'}`}>
 
-        {/* ══════ HERO ═══════════════════════════════════════════════════════ */}
+        {/* ═══════════ HERO ════════════════════════════════════════════════ */}
         <section className="hero">
           <div className="hero-bg">
             <div className="hbg-panel hbg-l" />
@@ -217,24 +198,32 @@ export default function Home() {
           </div>
           <div className="hero-overlay" />
 
+          {/* SHINE left / DIGITAL right — same size, staggered */}
           <div className="hero-title-block" ref={heroWordRef}>
             <span className="ht-shine">SHINE</span>
             <span className="ht-digital">DIGITAL</span>
           </div>
 
+          {/* Bottom bar */}
           <div className="hero-bottom">
-            <p className="hero-sub">Marketing that moves.</p>
+            <p className="hero-sub">
+              Marketing that moves.
+            </p>
             <div className="hero-actions">
               <Link to="/join-us" className="btn-primary">Start Your Project</Link>
               <Link to="/services" className="btn-ghost">Our Services</Link>
             </div>
           </div>
 
+          {/* bottom right quote */}
           <div className="hero-quote-corner">
             <em>let your brand speak louder<br />than the noise around it.</em>
           </div>
 
-          <div className="hero-lines"><div /><div /><div /></div>
+          {/* Strip lines */}
+          <div className="hero-lines">
+            <div /><div /><div />
+          </div>
 
           <div className="hero-scroll-indicator">
             <span>scroll</span>
@@ -242,9 +231,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══════ ABOUT ══════════════════════════════════════════════════════ */}
+        {/* ═══════════ ABOUT ═══════════════════════════════════════════════ */}
         <section className="about-section">
 
+          {/* Contrast grid */}
           <div className="about-grid">
             <div className="about-left" data-r>
               <p className="eyebrow">About Us</p>
@@ -263,6 +253,7 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Founder cards 9:16 */}
           <div className="founders-row" data-r style={{ '--delay': '0.2s' }}>
             {[
               { initial: 'S', name: 'Savin Tuscano', title: 'Co-Founder & Creative Director', bio: 'Savin leads creative strategy with a sharp eye for brand and an instinct for what resonates with modern audiences.' },
@@ -286,7 +277,7 @@ export default function Home() {
 
         </section>
 
-        {/* ══════ SERVICES ═══════════════════════════════════════════════════ */}
+        {/* ═══════════ SERVICES ════════════════════════════════════════════ */}
         <section className="services-section">
           <div className="svc-section-head" data-r>
             <p className="eyebrow">What We Do</p>
@@ -321,7 +312,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══════ WHY US ═════════════════════════════════════════════════════ */}
+        {/* ═══════════ WHY US ══════════════════════════════════════════════ */}
         <section className="why-section">
           <div className="why-head" data-r>
             <p className="eyebrow">Why Work With Shine Digital</p>
@@ -338,7 +329,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══════ PROCESS ════════════════════════════════════════════════════ */}
+        {/* ═══════════ PROCESS ═════════════════════════════════════════════ */}
         <section className="process-section">
           <div className="process-head" data-r>
             <p className="eyebrow">How We Work</p>
@@ -358,7 +349,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══════ CLOSING CTA ════════════════════════════════════════════════ */}
+        {/* ═══════════ CLOSING CTA ═════════════════════════════════════════ */}
         <section className="closing-section" data-r>
           <div className="closing-inner">
             <p className="eyebrow">Let's Work Together</p>
@@ -374,7 +365,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ══════ FOOTER ═════════════════════════════════════════════════════ */}
+        {/* ═══════════ FOOTER ══════════════════════════════════════════════ */}
         <footer className="footer">
           <div className="ft-top">
             <div className="ft-brand">

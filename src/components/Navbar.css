@@ -20,25 +20,22 @@
 
 .navbar-logo {
   display: flex;
-  align-items: baseline;
-  gap: 0;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  align-items: center;
 }
 
-.logo-shine {
-  color: var(--white);
+.navbar-logo-img {
+  height: 36px;
+  width: auto;
+  display: block;
+  transition: opacity 0.2s ease;
 }
 
-.logo-digital {
-  color: var(--grey-light);
+.navbar-logo:hover .navbar-logo-img {
+  opacity: 0.75;
 }
 
-.logo-dot {
-  color: var(--white);
-  margin-left: 1px;
+.navbar.scrolled .navbar-logo-img {
+  height: 30px;
 }
 
 .navbar-links {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import './Navbar.css'
+import logo from './assets/logo.png'
 
 const navLinks = [
   { label: 'Services', to: '/services' },
@@ -31,9 +32,7 @@ export default function Navbar() {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <Link to="/" className="navbar-logo">
-          <span className="logo-shine">SHINE</span>
-          <span className="logo-digital">DIGITAL</span>
-          <span className="logo-dot">.</span>
+          <img src={logo} alt="Shine Digital" className="navbar-logo-img" />
         </Link>
 
         <div className="navbar-links">
