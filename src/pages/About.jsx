@@ -11,9 +11,9 @@ const VALUES = [
 
 const STATS = [
   { num: '50+', label: 'Brands Worked With' },
-  { num: '3+',  label: 'Years of Experience' },
+  { num: '3+', label: 'Years of Experience' },
   { num: '100%', label: 'Client Satisfaction' },
-  { num: '4',   label: 'Core Services' },
+  { num: '4', label: 'Core Services' },
 ]
 
 export default function About() {
@@ -33,7 +33,7 @@ export default function About() {
       <section className="ap-hero">
         <p className="ap-eyebrow" data-r>About Us</p>
         <h1 className="ap-headline" data-r>
-          We Are<br/><span className="ap-outline">Shine</span><br/>Digital.
+          We Are<br /><span className="ap-outline">Shine</span><br />Digital.
         </h1>
         <p className="ap-sub" data-r>
           A Mumbai-based digital marketing agency built for brands that want to grow with intention.
