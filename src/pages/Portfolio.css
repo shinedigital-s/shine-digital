@@ -1,0 +1,231 @@
+.portfolio-page {
+  padding-top: 80px;
+}
+
+.pf-hero {
+  padding: 6rem 3rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.pf-hero.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pf-hero__inner .section-label { margin-bottom: 1.5rem; }
+
+.pf-hero__title {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+}
+
+.pf-hero__title em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.pf-hero__sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+  max-width: 450px;
+  line-height: 1.7;
+}
+
+/* Filter */
+.pf-filter {
+  padding: 0 3rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pf-filter__inner {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pf-filter__btn {
+  padding: 0.6rem 1.4rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all 0.3s ease;
+  font-family: var(--font);
+}
+
+.pf-filter__btn:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+}
+
+.pf-filter__btn.active {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+/* Grid */
+.pf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  padding: 0 3rem 6rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pf-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease calc(var(--i) * 0.1s), transform 0.7s ease calc(var(--i) * 0.1s);
+}
+
+.pf-card.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pf-card--large { grid-column: span 8; }
+.pf-card--tall { grid-column: span 4; }
+.pf-card--medium { grid-column: span 6; }
+
+.pf-card__media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--grey-mid);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 1rem;
+}
+
+.pf-card__ph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.pf-card__ph-icon {
+  font-size: 1.5rem;
+  opacity: 0.2;
+}
+
+.pf-card__ph span {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.15);
+  text-transform: uppercase;
+}
+
+.pf-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.pf-card:hover .pf-card__overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pf-card__overlay-cat {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.4rem;
+}
+
+.pf-card__overlay-content h3 {
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.pf-card__overlay-client {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+}
+
+.pf-card__meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.pf-card__num {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+
+.pf-card__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.2rem;
+}
+
+.pf-card__client {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  font-weight: 300;
+}
+
+.pf-card__tag {
+  margin-left: auto;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .pf-card--large { grid-column: span 12; }
+  .pf-card--tall { grid-column: span 6; }
+  .pf-card--medium { grid-column: span 12; }
+}
+
+@media (max-width: 768px) {
+  .portfolio-page { padding-top: 70px; }
+  .pf-hero { padding: 3rem 1.5rem 3rem; }
+  .pf-filter { padding: 0 1.5rem 2.5rem; }
+  .pf-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1.5rem 4rem;
+  }
+  .pf-card--large,
+  .pf-card--tall,
+  .pf-card--medium { grid-column: span 1; }
+}
