@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
-import logoVideo from '../assets/logo.mp4';
 import logoMobileVideo from '../assets/logomobile.MP4';
+import reelsVideo from '../assets/services reels.1 (1).mp4';
 
 /* ── Reveal-on-scroll hook ── */
 function useReveal(threshold = 0.15) {
@@ -33,23 +33,92 @@ function VideoPlaceholder({ label = 'VIDEO', aspect = '16/9', className = '' }) 
   );
 }
 
-/* ── Hero ── */
+/* ── Intro Splash ── */
+function IntroSplash({ onFinished }) {
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    const handleMessage = (e) => {
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (
+          data?.event === 'ended' ||
+          data?.type === 'ended' ||
+          data?.action === 'ended'
+        ) {
+          dismiss();
+        }
+      } catch (_) { }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  const dismiss = () => {
+    setFading(true);
+    setTimeout(() => onFinished(), 800);
+  };
+
+  return (
+    <div
+      className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}
+      onClick={dismiss}
+    >
+      {/* Desktop 16:9 */}
+      <div
+        className="intro-splash__frame intro-splash__frame--desktop"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <iframe
+          src="https://play.gumlet.io/embed/69f505961dfaccdc955d415d?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=false"
+          referrerPolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          allowFullScreen
+          title="Intro Desktop"
+        />
+      </div>
+
+      {/* Mobile 9:16 */}
+      <div
+        className="intro-splash__frame intro-splash__frame--mobile"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <iframe
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=false"
+          referrerPolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          allowFullScreen
+          title="Intro Mobile"
+        />
+      </div>
+
+      <button className="intro-skip" onClick={dismiss}>
+        Skip ↗
+      </button>
+    </div>
+  );
+}
+
+/* ── Hero — Gumlet 16:9 banner (replaces old video) ── */
 function Hero() {
   return (
     <section className="hero">
-      <div className="hero__bg">
-        {/* Desktop video */}
-        <video
-          className="hero__video hero__video--desktop"
-          src={logoVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
+      {/* Desktop: Gumlet iframe */}
+      <div className="hero__gumlet hero__gumlet--desktop">
+        <iframe
+          loading="lazy"
+          title="Gumlet video player"
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84950?background=false&autoplay=true&loop=true&disable_player_controls=false"
+          referrerPolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          allowFullScreen
         />
-        {/* Mobile video */}
+      </div>
+
+      {/* Mobile: original video */}
+      <div className="hero__mobile-bg">
         <video
-          className="hero__video hero__video--mobile"
+          className="hero__video"
           src={logoMobileVideo}
           autoPlay
           muted
@@ -86,41 +155,12 @@ function AboutPreview() {
         </Link>
       </div>
       <div className="about-preview__right">
-        <VideoPlaceholder label="OUR STORY" aspect="16/9" className="about-preview__vid" />
+        <div className="about-preview__vid about-preview__gumlet"><iframe loading="lazy" title="About Us" src="https://play.gumlet.io/embed/69f245fa9c68b6349ab356ab?background=false&autoplay=true&loop=true&disable_player_controls=false" referrerPolicy="origin" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write" allowFullScreen /></div>
       </div>
     </section>
   );
 }
 
-/* ── Reels Section ── */
-function ReelsSection() {
-  const [ref, visible] = useReveal(0.1);
-  return (
-    <section className={`reels-section ${visible ? 'revealed' : ''}`} ref={ref}>
-      <div className="reels-section__header">
-        <p className="section-label">Portfolio Highlights</p>
-        <h2>Latest Work</h2>
-      </div>
-      <div className="reels-section__grid">
-        {['REEL 01', 'REEL 02', 'REEL 03'].map((label, i) => (
-          <div
-            key={i}
-            className="reel-card"
-            style={{ transitionDelay: `${i * 0.12}s` }}
-          >
-            <VideoPlaceholder label={label} aspect="9/16" className="reel-card__vid" />
-            <div className="reel-card__info">
-              <span className="reel-card__num">0{i + 1}</span>
-              <span className="reel-card__tag">
-                {['Brand Film', 'Social Media', 'Campaign'][i]}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 /* ── Services Sticky Scroll ── */
 const SERVICES = [
@@ -158,7 +198,6 @@ function ServicesSection() {
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll('.svc-card');
     if (!cards) return;
-
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -170,7 +209,6 @@ function ServicesSection() {
       },
       { threshold: 0.55, rootMargin: '-10% 0px -35% 0px' }
     );
-
     cards.forEach((c) => obs.observe(c));
     return () => obs.disconnect();
   }, []);
@@ -178,14 +216,21 @@ function ServicesSection() {
   return (
     <section className="svc-section" ref={sectionRef}>
       <div className="svc-section__inner">
-        {/* LEFT sticky */}
         <div className="svc-left" ref={leftRef}>
           <div className="svc-left__content">
             <p className="section-label">What We Do</p>
             <h2 className="svc-left__heading">
               Our<br /><em>Services</em>
             </h2>
-            <VideoPlaceholder label="SERVICES REEL" aspect="4/5" className="svc-left__vid" />
+            <video
+              className="svc-left__vid"
+              src={reelsVideo}
+              style={{ aspectRatio: '4/5', width: '100%', objectFit: 'cover' }}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
             <div className="svc-left__progress">
               {SERVICES.map((_, i) => (
                 <div
@@ -196,8 +241,6 @@ function ServicesSection() {
             </div>
           </div>
         </div>
-
-        {/* RIGHT scroll */}
         <div className="svc-right">
           {SERVICES.map((s, i) => (
             <div
@@ -246,11 +289,15 @@ function BrandsSection() {
 
 /* ── Home ── */
 export default function Home() {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
     <div className="home">
+      {showIntro && (
+        <IntroSplash onFinished={() => setShowIntro(false)} />
+      )}
       <Hero />
       <AboutPreview />
-      <ReelsSection />
       <ServicesSection />
       <BrandsSection />
     </div>

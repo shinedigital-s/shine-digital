@@ -1,8 +1,57 @@
-.about-page {
-  padding-top: 80px;
+/* ─── Reset & Base ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Hero */
+:root {
+  --black: #080808;
+  --white: #f5f5f2;
+  --grey-mid: #1a1a1a;
+  --accent: #e8ff47;
+  /* electric lime — energetic accent */
+  --accent2: #ff6b35;
+  /* warm pop for hover moments */
+}
+
+/* ─── Cursor Glow ───────────────────────────────── */
+.cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 255, 71, 0.055) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+/* ─── Page ──────────────────────────────────────── */
+.about-page {
+  padding-top: 80px;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Section Label ─────────────────────────────── */
+.section-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* ─── Hero ──────────────────────────────────────── */
 .about-hero {
   padding: 6rem 3rem 5rem;
   max-width: 1400px;
@@ -10,6 +59,7 @@
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.9s ease, transform 0.9s ease;
+  position: relative;
 }
 
 .about-hero.revealed {
@@ -26,6 +76,7 @@
   margin-bottom: 1.5rem;
 }
 
+/* Scramble title */
 .about-hero__title {
   font-size: clamp(3rem, 8vw, 7rem);
   font-weight: 900;
@@ -35,39 +86,94 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .about-hero__title span {
   font-weight: 300;
-  font-style: normal;
 }
 
 .about-hero__title em {
   font-style: italic;
   font-weight: 900;
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline draw effect */
+.about-hero__title em::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+}
+
+.about-hero.revealed .about-hero__title em::after {
+  width: 100%;
 }
 
 .about-hero__sub {
   font-size: 1.05rem;
   line-height: 1.7;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   font-weight: 300;
   max-width: 500px;
 }
 
+/* ─── Stats ─────────────────────────────────────── */
 .about-hero__stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .about-stat {
   padding: 2rem 1.5rem;
-  border-right: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease calc(var(--i) * 0.1s), transform 0.6s ease calc(var(--i) * 0.1s);
+  transition:
+    opacity 0.6s ease calc(var(--i) * 0.1s),
+    transform 0.6s ease calc(var(--i) * 0.1s),
+    background 0.3s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-stat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.about-stat:hover::before {
+  transform: scaleY(1);
+}
+
+.about-stat:hover .about-stat__num,
+.about-stat:hover .about-stat__label {
+  color: var(--black) !important;
+  position: relative;
+  z-index: 1;
+}
+
+.about-stat__num,
+.about-stat__label {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
 }
 
 .about-hero.revealed .about-stat {
@@ -92,15 +198,15 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.35);
 }
 
-/* Mission/Vision */
+/* ─── Mission / Vision ──────────────────────────── */
 .mv-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   margin: 0;
   opacity: 0;
   transform: translateY(40px);
@@ -115,10 +221,27 @@
 .mv-card {
   background: var(--black);
   padding: 5rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.mv-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mv-section.revealed .mv-card::after {
+  width: 100%;
 }
 
 .mv-card--vision {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .mv-card .section-label {
@@ -135,9 +258,10 @@
 .mv-card h2 em {
   font-style: italic;
   font-weight: 700;
+  color: var(--accent);
 }
 
-/* What We Do */
+/* ─── What We Do ────────────────────────────────── */
 .what-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -171,13 +295,33 @@
 
 .what-item {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1.5rem;
   padding: 1.5rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   opacity: 0;
-  transform: translateX(-20px);
-  transition: opacity 0.5s ease calc(var(--i) * 0.08s), transform 0.5s ease calc(var(--i) * 0.08s);
+  transform: translateX(-30px);
+  transition:
+    opacity 0.5s ease calc(var(--i) * 0.09s),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.09s);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.what-item::before {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(232, 255, 71, 0.05);
+  transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.what-item:hover::before {
+  left: 0;
 }
 
 .what-section.revealed .what-item {
@@ -186,30 +330,52 @@
 }
 
 .what-item:first-child {
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .what-item__num {
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.what-item:hover .what-item__num {
+  color: var(--accent);
 }
 
 .what-item__text {
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: rgba(255,255,255,0.7);
-  transition: color 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease, letter-spacing 0.3s ease;
 }
 
 .what-item:hover .what-item__text {
   color: var(--white);
+  letter-spacing: 0em;
 }
 
-/* Workflow */
+/* Arrow on hover */
+.what-item__arrow {
+  margin-left: auto;
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.what-item:hover .what-item__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── Workflow ───────────────────────────────────── */
 .workflow-section {
   padding: 7rem 3rem;
   max-width: 1400px;
@@ -245,13 +411,38 @@
 }
 
 .workflow-step {
-  padding: 2.5rem 2rem 2.5rem 0;
-  border-left: 1px solid rgba(255,255,255,0.08);
-  padding-left: 2rem;
+  padding: 2.5rem 2rem 2.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease calc(var(--i) * 0.15s), transform 0.6s ease calc(var(--i) * 0.15s);
+  transform: translateY(30px);
+  transition:
+    opacity 0.6s ease calc(var(--i) * 0.15s),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.15s),
+    border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.workflow-step:hover {
+  border-color: var(--accent);
+}
+
+/* Animated top bar on hover */
+.workflow-step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.workflow-step:hover::before {
+  transform: scaleX(1);
 }
 
 .workflow-section.revealed .workflow-step {
@@ -262,10 +453,15 @@
 .workflow-step__num {
   font-size: 2.5rem;
   font-weight: 900;
-  color: rgba(255,255,255,0.06);
+  color: rgba(255, 255, 255, 0.06);
   letter-spacing: -0.04em;
   margin-bottom: 1.5rem;
   line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.workflow-step:hover .workflow-step__num {
+  color: var(--accent);
 }
 
 .workflow-step h3 {
@@ -273,16 +469,22 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
 }
 
 .workflow-step p {
   font-size: 0.85rem;
   line-height: 1.7;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 300;
+  transition: color 0.3s ease;
 }
 
-/* Founders */
+.workflow-step:hover p {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─── Founders ───────────────────────────────────── */
 .founders-section {
   padding: 7rem 3rem;
   max-width: 1400px;
@@ -320,7 +522,9 @@
   gap: 2rem;
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.7s ease calc(var(--i) * 0.15s), transform 0.7s ease calc(var(--i) * 0.15s);
+  transition:
+    opacity 0.7s ease calc(var(--i) * 0.15s),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.15s);
 }
 
 .founders-section.revealed .founder-card {
@@ -331,9 +535,28 @@
 .founder-card__photo {
   aspect-ratio: 3/4;
   background: var(--grey-mid);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
   overflow: hidden;
+  transition: border-color 0.4s ease;
+}
+
+.founder-card:hover .founder-card__photo {
+  border-color: var(--accent);
+}
+
+/* Shimmer sweep */
+.founder-card__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(232, 255, 71, 0.06) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+}
+
+.founder-card:hover .founder-card__photo::after {
+  transform: translateX(100%);
 }
 
 .founder-card__photo-ph {
@@ -347,8 +570,13 @@
 .founder-card__photo-ph span {
   font-size: clamp(4rem, 10vw, 6rem);
   font-weight: 900;
-  color: rgba(255,255,255,0.06);
+  color: rgba(255, 255, 255, 0.06);
   letter-spacing: -0.04em;
+  transition: color 0.4s ease;
+}
+
+.founder-card:hover .founder-card__photo-ph span {
+  color: rgba(232, 255, 71, 0.15);
 }
 
 .founder-card__info h3 {
@@ -363,48 +591,121 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.35);
   margin-bottom: 1rem;
 }
 
 .founder-card__bio {
   font-size: 0.9rem;
   line-height: 1.7;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   font-weight: 300;
 }
 
-/* Responsive */
+/* ─── Marquee divider (fun detail) ─────────────── */
+.marquee-bar {
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.8rem 0;
+  white-space: nowrap;
+}
+
+.marquee-bar__inner {
+  display: inline-flex;
+  gap: 2rem;
+  animation: marquee 18s linear infinite;
+}
+
+.marquee-bar__inner span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.12);
+}
+
+.marquee-bar__inner .dot {
+  color: var(--accent);
+  opacity: 0.6;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ─── Responsive ─────────────────────────────────── */
 @media (max-width: 1024px) {
   .about-hero__stats {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .about-stat {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
+
   .workflow-steps {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .what-section {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
+
   .what-section__heading {
     position: static;
   }
+
   .mv-section {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
-  .about-page { padding-top: 70px; }
-  .about-hero { padding: 3rem 1.5rem 4rem; }
-  .about-hero__stats { grid-template-columns: repeat(2, 1fr); }
-  .mv-card { padding: 3rem 2rem; }
-  .what-section { padding: 5rem 1.5rem; }
-  .workflow-section { padding: 5rem 1.5rem; }
-  .workflow-steps { grid-template-columns: 1fr; }
-  .founders-section { padding: 5rem 1.5rem; }
-  .founders-grid { grid-template-columns: 1fr; }
+  .about-page {
+    padding-top: 70px;
+  }
+
+  .about-hero {
+    padding: 3rem 1.5rem 4rem;
+  }
+
+  .about-hero__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mv-card {
+    padding: 3rem 2rem;
+  }
+
+  .what-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .workflow-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .workflow-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .founders-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .founders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cursor-glow {
+    display: none;
+  }
 }
