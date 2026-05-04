@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
-import logoMobileVideo from '../assets/logomobile.MP4';
 
 /* ── Lenis Smooth Scroll Init ── */
 function useLenis() {
@@ -53,7 +52,6 @@ function IntroSplash({ onFinished }) {
   };
 
   useEffect(() => {
-    // Listen for postMessage from Gumlet iframe when video ends
     const handleMessage = (e) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
@@ -68,7 +66,6 @@ function IntroSplash({ onFinished }) {
     };
     window.addEventListener('message', handleMessage);
 
-    // Fallback: auto-dismiss after 12s in case postMessage never fires
     const fallback = setTimeout(() => dismiss(), 12000);
 
     return () => {
@@ -90,7 +87,7 @@ function IntroSplash({ onFinished }) {
       </div>
       <div className="intro-splash__frame intro-splash__frame--mobile">
         <iframe
-          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=false"
+          src="https://play.gumlet.io/embed/69f505961dfaccdc955d415d?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=false"
           referrerPolicy="origin"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
           allowFullScreen
@@ -116,13 +113,14 @@ function Hero() {
         />
       </div>
       <div className="hero__mobile-bg">
-        <video
-          className="hero__video"
-          src={logoMobileVideo}
-          autoPlay
-          muted
-          loop
-          playsInline
+        <iframe
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
+          loading="lazy"
+          title="Gumlet video player"
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84950?background=false&autoplay=true&loop=true&disable_player_controls=false"
+          referrerPolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          allowFullScreen
         />
         <div className="hero__overlay" />
       </div>
