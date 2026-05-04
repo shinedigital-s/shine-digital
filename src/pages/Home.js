@@ -87,7 +87,7 @@ function IntroSplash({ onFinished }) {
       </div>
       <div className="intro-splash__frame intro-splash__frame--mobile">
         <iframe
-          src="https://play.gumlet.io/embed/69f505961dfaccdc955d415d?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=false"
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=false&disable_player_controls=true"
           referrerPolicy="origin"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
           allowFullScreen
@@ -117,7 +117,7 @@ function Hero() {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
           loading="lazy"
           title="Gumlet video player"
-          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84950?background=false&autoplay=true&loop=true&disable_player_controls=false"
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84950?background=false&autoplay=true&loop=true&disable_player_controls=true"
           referrerPolicy="origin"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
           allowFullScreen

@@ -122,13 +122,16 @@
   display: block;
 }
 
-.hero__mobile-bg {
-  display: none;
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 600px;
-  overflow: hidden;
+@media (max-width: 768px) {
+  .hero__mobile-bg {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;        /* ✅ key fix */
+    min-height: unset;   /* ✅ remove forced space */
+    aspect-ratio: 16 / 9; /* keeps video proportion clean */
+    overflow: hidden;
+  }
 }
 
 .hero__video {
@@ -163,7 +166,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 6rem;
   align-items: center;
-  padding: 8rem 3rem;
+  padding: 3rem 3rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
   opacity: 0;
@@ -227,13 +230,13 @@
   .about-preview {
     grid-template-columns: 1fr;
     gap: 3rem;
-    padding: 6rem 2rem;
+    padding: 1.5rem 2rem 6rem;
   }
 }
 
 @media (max-width: 768px) {
   .about-preview {
-    padding: 5rem 1.5rem;
+    padding: 1rem 1.5rem 5rem;
   }
 }
 
