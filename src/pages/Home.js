@@ -172,15 +172,16 @@ function AboutPreview() {
   return (
     <section className={`about-preview ${visible ? 'revealed' : ''}`} ref={ref}>
       <div className="about-preview__left">
-        <p className="section-label">About Us</p>
+        <p className="section-label">About Shine Digital</p>
         <h2 className="about-preview__heading">
-          We don't just<br />make content—<br />we build <em>worlds.</em>
+          Building brands<br />that <em>stand out.</em>
         </h2>
         <p className="about-preview__body">
-          Shine Digital is a full-service creative studio from Mumbai,
-          helping brands find their voice in the noise. From social
-          strategy to cinematic films, we do it all — and we do it
-          with obsessive precision.
+          Shine Digital is a Mumbai based digital marketing and brand strategy
+          agency focused on helping businesses grow with clarity and purpose.
+          We help businesses define what they stand for, shape how they
+          communicate, and build a digital presence that people recognize
+          and trust.
         </p>
         <Link to="/about" className="btn-outline">
           <span>Discover Our Story</span>
@@ -202,25 +203,25 @@ function AboutPreview() {
 const SERVICES = [
   {
     num: '01', title: 'Social Media',
-    desc: 'Content strategies that grow communities, spark conversations, and turn followers into fans. We live on the feed so your brand always leads it.',
+    desc: 'Strategy and content built to grow communities and earn attention. We help your brand show up consistently and meaningfully across every platform.',
     tags: ['Strategy', 'Content', 'Analytics'],
     videoId: '69f75eef1dfaccdc957d3391',
   },
   {
     num: '02', title: 'Branding',
-    desc: 'Identity systems built to endure. Logos, typography, tone-of-voice — every element crafted so your brand speaks before you even say a word.',
+    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice — every element built to last.',
     tags: ['Identity', 'Typography', 'Voice'],
     videoId: '69f75eef1dfaccdc957d338f',
   },
   {
     num: '03', title: 'Website',
-    desc: 'Digital experiences that convert. From landing pages to full e-commerce, we design and build fast, beautiful sites that do the work.',
+    desc: 'Digital experiences that build trust and drive growth. Fast, beautiful, and built around your brand and your audience.',
     tags: ['Design', 'Dev', 'SEO'],
     videoId: '69f75d191dfaccdc957d12f1',
   },
   {
     num: '04', title: 'Films',
-    desc: 'Cinematic brand storytelling that stays with people long after they watch. Scripts, shoots, edits — end-to-end production excellence.',
+    desc: 'Brand films and visual content that communicate your story with intention. From script to screen, we craft work people remember.',
     tags: ['Production', 'Direction', 'Edit'],
     videoId: '69f75eef1dfaccdc957d3387',
   },
@@ -247,6 +248,9 @@ function ServicesSection() {
       <div className="svc-section__header">
         <p className="section-label">What We Do</p>
         <h2 className="svc-section__title">Our <em>Services</em></h2>
+        <p className="svc-section__intro">
+          We help brands grow through strategy, marketing, design, and digital experiences.
+        </p>
       </div>
 
       {/* Desktop */}

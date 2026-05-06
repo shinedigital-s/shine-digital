@@ -89,7 +89,7 @@ function CursorGlow() {
 
 /* ─── Marquee Bar ───────────────────────────────── */
 function MarqueeBar() {
-  const items = ['Creativity', 'Strategy', 'Film', 'Branding', 'Social', 'Design', 'Story'];
+  const items = ['Strategy', 'Branding', 'Marketing', 'Design', 'Digital', 'Growth', 'Clarity'];
   const doubled = [...items, ...items, ...items, ...items];
   return (
     <div className="marquee-bar">
@@ -105,25 +105,18 @@ function MarqueeBar() {
   );
 }
 
-/* ─── Data ──────────────────────────────────────── */
-const WORKFLOW = [
-  { step: '01', title: 'Discovery', desc: 'We deep dive into your brand, audience, and goals. No assumptions — just honest listening and sharp questions.' },
-  { step: '02', title: 'Strategy', desc: 'We map out the path forward. Every deliverable is justified by data and shaped by creative instinct.' },
-  { step: '03', title: 'Creation', desc: "This is where the magic happens. Scripts, visuals, pixels — we obsess over every detail until it's right." },
-  { step: '04', title: 'Launch', desc: 'We deploy with precision and watch the numbers. Then we iterate, optimize, and keep pushing forward.' },
-];
-
 /* ─── About Page ────────────────────────────────── */
 export default function About() {
   useLenis();
 
   const [heroRef, heroVisible] = useReveal(0.1);
+  const [introRef, introVisible] = useReveal();
   const [mvRef, mvVisible] = useReveal();
+  const [perspectiveRef, perspectiveVisible] = useReveal();
   const [whatRef, whatVisible] = useReveal();
-  const [workRef, workVisible] = useReveal(0.1);
   const [foundersRef, foundersVisible] = useReveal();
 
-  const scrambled = useScramble('obsession.', heroVisible, 1100);
+  const scrambled = useScramble('stand out.', heroVisible, 1100);
 
   return (
     <div className="about-page">
@@ -132,14 +125,15 @@ export default function About() {
       {/* ── Hero ── */}
       <section className={`about-hero ${heroVisible ? 'revealed' : ''}`} ref={heroRef}>
         <div className="about-hero__inner">
-          <p className="section-label">About Us</p>
+          <p className="section-label">About Shine Digital</p>
           <h1 className="about-hero__title">
-            <span>Built on</span>
+            <span>Building brands that</span>
             <em>{scrambled}</em>
           </h1>
           <p className="about-hero__sub">
-            Shine Digital is where creativity meets strategy —
-            a studio that doesn't settle for good when great is possible.
+            Shine Digital is a Mumbai based digital marketing and brand
+            strategy agency focused on helping businesses grow with
+            clarity and purpose.
           </p>
         </div>
         <div className="about-hero__stats">
@@ -159,34 +153,95 @@ export default function About() {
 
       <MarqueeBar />
 
+      {/* ── Intro Statement ── */}
+      <section
+        className={`about-intro-section ${introVisible ? 'revealed' : ''}`}
+        ref={introRef}
+      >
+        <div className="about-intro-section__inner">
+          <p className="about-intro-section__lead">
+            In today's crowded digital landscape, many brands are active
+            but not memorable. Content is created, ads are run, and platforms
+            are used, but the brand itself often lacks a clear identity.
+          </p>
+          <p className="about-intro-section__lead">
+            At Shine Digital, our work begins by solving that problem.
+          </p>
+          <p className="about-intro-section__lead">
+            We help businesses define what they stand for, shape how they
+            communicate, and build a digital presence that people recognize
+            and trust.
+          </p>
+          <h3 className="about-intro-section__pull">
+            Our role is not just to run marketing campaigns.<br />
+            Our role is to <em>build brands that grow.</em>
+          </h3>
+        </div>
+      </section>
+
       {/* ── Mission / Vision ── */}
       <section className={`mv-section ${mvVisible ? 'revealed' : ''}`} ref={mvRef}>
         <div className="mv-card">
-          <p className="section-label">Mission</p>
-          <h2>To amplify brands that dare to be different, crafting content that doesn't just capture attention — it <em>earns</em> it.</h2>
+          <p className="section-label">Our Vision</p>
+          <h2>
+            To help businesses grow into <em>strong and recognizable brands</em> in
+            the digital world — creating digital experiences that build
+            trust, credibility, and long term value.
+          </h2>
         </div>
         <div className="mv-card mv-card--vision">
-          <p className="section-label">Vision</p>
-          <h2>To be India's most creative digital studio — where every frame, every word, every pixel tells a story worth sharing.</h2>
+          <p className="section-label">Our Mission</p>
+          <h2>
+            To support businesses through thoughtful strategy, creative
+            execution, and effective digital marketing — combining design,
+            technology, and communication to <em>achieve sustainable growth.</em>
+          </h2>
         </div>
       </section>
+
+      {/* ── Perspective ── */}
+      <section
+        className={`perspective-section ${perspectiveVisible ? 'revealed' : ''}`}
+        ref={perspectiveRef}
+      >
+        <div className="perspective-section__inner">
+          <p className="section-label">Our Perspective</p>
+          <h2 className="perspective-section__heading">
+            Successful marketing starts with<br />
+            building a <em>strong brand.</em>
+          </h2>
+          <p className="perspective-section__body">
+            When a brand has clarity in its identity, message, and purpose,
+            every digital effort becomes more meaningful. We look beyond
+            individual campaigns or platforms — our focus is on shaping a
+            brand's overall presence so that every website, piece of content,
+            and marketing effort works together to create a clear and
+            lasting impression.
+          </p>
+        </div>
+      </section>
+
+      <MarqueeBar />
 
       {/* ── What We Do ── */}
       <section className={`what-section ${whatVisible ? 'revealed' : ''}`} ref={whatRef}>
         <div className="what-section__left">
           <p className="section-label">What We Do</p>
           <h2 className="what-section__heading">
-            Full-spectrum<br />creative power.
+            We help brands<br />grow.
           </h2>
+          <p className="what-section__sub">
+            Through strategy, marketing, design, and digital experiences.
+          </p>
         </div>
         <div className="what-section__right">
           {[
-            'Social media that stops the scroll',
-            'Branding that people remember',
-            'Websites that actually convert',
-            'Films that move people',
-            'Campaigns built on real insight',
-            'Strategy driven by data and instinct',
+            'Brand Strategy & Positioning',
+            'Identity & Brand Design',
+            'Digital Marketing',
+            'Social Media & Content',
+            'Websites & Digital Experiences',
+            'Films & Visual Storytelling',
           ].map((item, i) => (
             <div key={i} className="what-item" style={{ '--i': i }}>
               <span className="what-item__num">0{i + 1}</span>
@@ -197,28 +252,7 @@ export default function About() {
         </div>
       </section>
 
-      <MarqueeBar />
-
-      {/* ── Workflow ── */}
-      <section className={`workflow-section ${workVisible ? 'revealed' : ''}`} ref={workRef}>
-        <div className="workflow-section__header">
-          <p className="section-label">How We Work</p>
-          <h2>Our Process</h2>
-        </div>
-        <div className="workflow-steps">
-          {WORKFLOW.map((w, i) => (
-            <div key={i} className="workflow-step" style={{ '--i': i }}>
-              <div className="workflow-step__num">{w.step}</div>
-              <div className="workflow-step__content">
-                <h3>{w.title}</h3>
-                <p>{w.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Founders ── */}
+      {/* ── Founders (kept as existing) ── */}
       <section className={`founders-section ${foundersVisible ? 'revealed' : ''}`} ref={foundersRef}>
         <p className="section-label">The Minds Behind It</p>
         <h2 className="founders-section__heading">Our Founders</h2>

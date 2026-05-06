@@ -5,29 +5,29 @@ const SERVICES_DATA = [
   {
     id: '01',
     title: 'Social Media',
-    tagline: 'Stop the scroll.',
-    desc: 'We build social media ecosystems — not just posts. Strategy, content, community, analytics. Everything it takes to make your brand impossible to ignore.',
+    tagline: 'Show up consistently.',
+    desc: 'We help brands build a clear and recognizable presence on social — through strategy, content, and community. Every post is shaped to communicate who you are and what you stand for.',
     offerings: ['Content Strategy', 'Reels & Stories', 'Community Management', 'Paid Ads', 'Influencer Collab', 'Monthly Analytics'],
   },
   {
     id: '02',
     title: 'Branding',
-    tagline: 'Identity that lasts.',
-    desc: 'Your brand is more than a logo. We craft complete identity systems — visual language, tone-of-voice, guidelines — that carry meaning and make you unforgettable.',
+    tagline: 'Identity with clarity.',
+    desc: 'Your brand is more than a logo. We craft complete identity systems — visual language, tone of voice, guidelines — that give your business clarity, character, and long term recognition.',
     offerings: ['Logo Design', 'Brand Guidelines', 'Typography System', 'Color Palette', 'Tone of Voice', 'Brand Collateral'],
   },
   {
     id: '03',
     title: 'Website',
     tagline: 'Digital presence, perfected.',
-    desc: 'Beautiful websites that convert. We design and build fast, responsive, SEO-optimised sites that work as hard as you do — and look better doing it.',
+    desc: 'Websites that build trust and drive growth. We design and develop fast, responsive, SEO ready experiences that reflect your brand and serve your audience.',
     offerings: ['UI/UX Design', 'Development', 'E-Commerce', 'CMS Setup', 'Performance Opt.', 'Ongoing Support'],
   },
   {
     id: '04',
     title: 'Films',
     tagline: 'Stories worth watching.',
-    desc: 'From concept to screen. We write, shoot, and edit cinematic brand films, product videos, and short-form content that stays with people long after they watch.',
+    desc: 'Brand films and visual content that communicate your story with intention. From concept to final cut, we craft work that stays with people long after they watch.',
     offerings: ['Concept & Script', 'Pre-Production', 'Cinematography', 'Direction', 'Colour Grading', 'Sound Design'],
   },
 ];
@@ -90,6 +90,9 @@ function HorizontalScrollSection() {
         <div className="horiz-section__header">
           <p className="section-label">What We Offer</p>
           <h2>Our Services</h2>
+          <p className="horiz-section__intro">
+            We help brands grow through strategy, marketing, design, and digital experiences.
+          </p>
         </div>
         <div className="horiz-track-wrap">
           <div className="horiz-track" ref={trackRef}>
@@ -127,10 +130,11 @@ export default function Services() {
         <div className="svc-page-hero__inner">
           <p className="section-label">Services</p>
           <h1 className="svc-page-hero__title">
-            Everything your<br />brand <em>needs.</em>
+            Everything your<br />brand <em>needs to grow.</em>
           </h1>
           <p className="svc-page-hero__sub">
-            Four disciplines. One studio. Infinite creative firepower.
+            Strategy, marketing, design, and digital experiences — built to
+            help your business stand out and grow with purpose.
           </p>
         </div>
       </section>
