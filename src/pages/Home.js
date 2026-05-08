@@ -205,25 +205,25 @@ const SERVICES = [
     num: '01', title: 'Social Media',
     desc: 'Strategy and content built to grow communities and earn attention. We help your brand show up consistently and meaningfully across every platform.',
     tags: ['Strategy', 'Content', 'Analytics'],
-    videoId: '69f75eef1dfaccdc957d3391',
+    videoId: '69f75d191dfaccdc957d12f1', // ✅ was Website's, actually Social Media
   },
   {
     num: '02', title: 'Branding',
     desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice — every element built to last.',
     tags: ['Identity', 'Typography', 'Voice'],
-    videoId: '69f75eef1dfaccdc957d338f',
+    videoId: '69f75eef1dfaccdc957d3387', // ✅ was Films's, actually Branding
   },
   {
     num: '03', title: 'Website',
     desc: 'Digital experiences that build trust and drive growth. Fast, beautiful, and built around your brand and your audience.',
     tags: ['Design', 'Dev', 'SEO'],
-    videoId: '69f75d191dfaccdc957d12f1',
+    videoId: '69f75eef1dfaccdc957d338f', // ✅ was Branding's, actually Website
   },
   {
     num: '04', title: 'Films',
     desc: 'Brand films and visual content that communicate your story with intention. From script to screen, we craft work people remember.',
     tags: ['Production', 'Direction', 'Edit'],
-    videoId: '69f75eef1dfaccdc957d3387',
+    videoId: '69f75eef1dfaccdc957d3391', // ✅ was Social Media's, actually Films
   },
 ];
 

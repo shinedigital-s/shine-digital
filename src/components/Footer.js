@@ -21,6 +21,7 @@ export default function Footer() {
               <li><Link to="/about">About</Link></li>
               <li><Link to="/services">Services</Link></li>
               <li><Link to="/portfolio">Portfolio</Link></li>
+              <li><Link to="/careers">Careers</Link></li>
             </ul>
           </div>
           <div className="footer__col">

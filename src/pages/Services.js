@@ -8,6 +8,7 @@ const SERVICES_DATA = [
     tagline: 'Show up consistently.',
     desc: 'We help brands build a clear and recognizable presence on social — through strategy, content, and community. Every post is shaped to communicate who you are and what you stand for.',
     offerings: ['Content Strategy', 'Reels & Stories', 'Community Management', 'Paid Ads', 'Influencer Collab', 'Monthly Analytics'],
+    videoId: '69f75d191dfaccdc957d12f1',
   },
   {
     id: '02',
@@ -15,6 +16,7 @@ const SERVICES_DATA = [
     tagline: 'Identity with clarity.',
     desc: 'Your brand is more than a logo. We craft complete identity systems — visual language, tone of voice, guidelines — that give your business clarity, character, and long term recognition.',
     offerings: ['Logo Design', 'Brand Guidelines', 'Typography System', 'Color Palette', 'Tone of Voice', 'Brand Collateral'],
+    videoId: '69f75eef1dfaccdc957d3387',
   },
   {
     id: '03',
@@ -22,6 +24,7 @@ const SERVICES_DATA = [
     tagline: 'Digital presence, perfected.',
     desc: 'Websites that build trust and drive growth. We design and develop fast, responsive, SEO ready experiences that reflect your brand and serve your audience.',
     offerings: ['UI/UX Design', 'Development', 'E-Commerce', 'CMS Setup', 'Performance Opt.', 'Ongoing Support'],
+    videoId: '69f75eef1dfaccdc957d338f',
   },
   {
     id: '04',
@@ -29,6 +32,7 @@ const SERVICES_DATA = [
     tagline: 'Stories worth watching.',
     desc: 'Brand films and visual content that communicate your story with intention. From concept to final cut, we craft work that stays with people long after they watch.',
     offerings: ['Concept & Script', 'Pre-Production', 'Cinematography', 'Direction', 'Colour Grading', 'Sound Design'],
+    videoId: '69f75eef1dfaccdc957d3391',
   },
 ];
 
@@ -57,8 +61,10 @@ function HorizontalScrollSection() {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    let rafId;
-
+    // Always use native scroll — Lenis scrolls the actual window,
+    // so getBoundingClientRect() + window scroll events work correctly.
+    // Trying to read window.__lenis here causes a race condition since
+    // child effects fire before the parent App effect sets window.__lenis.
     const onScroll = () => {
       const rect = section.getBoundingClientRect();
       const scrollProgress = -rect.top / (rect.height - window.innerHeight);
@@ -67,17 +73,13 @@ function HorizontalScrollSection() {
       track.style.transform = `translateX(-${clamped * maxScroll}px)`;
     };
 
-    const lenis = window.__lenis;
-    if (lenis) {
-      lenis.on('scroll', onScroll);
-    } else {
-      window.addEventListener('scroll', onScroll, { passive: true });
-    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Run once on mount to set initial position
+    onScroll();
 
     return () => {
-      if (lenis) lenis.off('scroll', onScroll);
       window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -98,6 +100,18 @@ function HorizontalScrollSection() {
           <div className="horiz-track" ref={trackRef}>
             {SERVICES_DATA.map((s, i) => (
               <div key={i} className="svc-h-card">
+                {/* Video background */}
+                <div className="svc-h-card__vid">
+                  <iframe
+                    src={`https://play.gumlet.io/embed/${s.videoId}?background=true&autoplay=true&loop=true&disable_player_controls=true&preload=true`}
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    title={s.title}
+                  />
+                </div>
+                {/* Overlay so text stays readable */}
+                <div className="svc-h-card__overlay" />
+
                 <div className="svc-h-card__num">{s.id}</div>
                 <div className="svc-h-card__top">
                   <h3 className="svc-h-card__title">{s.title}</h3>

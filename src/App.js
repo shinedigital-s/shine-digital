@@ -10,6 +10,7 @@ import Services from './pages/Services';
 import Portfolio from './pages/Portfolio';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import Careers from './pages/Careers';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -41,6 +42,7 @@ function AppInner() {
 
     return () => {
       lenis.destroy();
+      window.__lenis = null;
     };
   }, []);
 
@@ -57,6 +59,7 @@ function AppInner() {
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/careers" element={<Careers />} />
       </Routes>
       <Footer />
     </>
