@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import collage from '../assets/collage.png';
+import introVideo from '../assets/logo before website loading.mp4';
 import './Home.css';
 
 /* ─── Logo imports ─────────────────────────────────────────────────────── */
@@ -74,70 +75,45 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
-/* ── Intro Splash (cinematic full-screen intro) ── */
+/* ── Intro Splash ── */
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const fadingRef = useRef(false);
+  const videoRef = useRef(null);
 
   const dismiss = () => {
     if (fadingRef.current) return;
     fadingRef.current = true;
     setFading(true);
-    setTimeout(() => onFinished(), 900);
+    setTimeout(() => onFinished(), 800);
   };
 
   useEffect(() => {
-    // Show skip after 3 s
     const skipTimer = setTimeout(() => setShowSkip(true), 3000);
-
-    // Auto-dismiss when Gumlet fires the 'ended' postMessage
-    const handleMessage = (e) => {
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        if (
-          data?.event === 'ended' ||
-          data?.type === 'ended' ||
-          data?.action === 'ended'
-        ) dismiss();
-      } catch (_) { }
-    };
-    window.addEventListener('message', handleMessage);
-
-    // Hard fallback — dismiss after 25 s if postMessage never fires
-    const fallback = setTimeout(() => dismiss(), 25000);
-
+    const fallback = setTimeout(() => dismiss(), 30000);
+    // Programmatic play — required on some mobile browsers
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => setShowSkip(true));
+    }
     return () => {
-      window.removeEventListener('message', handleMessage);
-      clearTimeout(fallback);
       clearTimeout(skipTimer);
+      clearTimeout(fallback);
     };
   }, []);
 
   return (
     <div className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}>
-
-      {/* Cover-fill desktop iframe */}
-      <div className="intro-cover intro-cover--desktop">
-        <iframe
-          src="https://play.gumlet.io/embed/69fb70b1c24b7e4dd498c367?preload=true&autoplay=true&loop=false&background=true&muted=true&disable_player_controls=true"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowFullScreen
-          title="Intro"
-        />
-      </div>
-
-      {/* Cover-fill mobile iframe */}
-      <div className="intro-cover intro-cover--mobile">
-        <iframe
-          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=true&muted=true&disable_player_controls=true"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
-          allowFullScreen
-          title="Intro Mobile"
-        />
-      </div>
-
-      {/* Skip button — fades in after 3 s */}
+      {/* Local video — autoPlay+muted+playsInline = guaranteed autoplay everywhere */}
+      <video
+        ref={videoRef}
+        className="intro-splash__video"
+        src={introVideo}
+        autoPlay
+        muted
+        playsInline
+        onEnded={dismiss}
+      />
       <button
         className={`intro-skip ${showSkip ? 'intro-skip--visible' : ''}`}
         onClick={dismiss}
@@ -157,7 +133,6 @@ function IntroSplash({ onFinished }) {
 function Hero() {
   return (
     <section className="hero">
-      {/* Desktop */}
       <div className="hero__gumlet hero__gumlet--desktop">
         <iframe
           loading="lazy"
@@ -168,8 +143,6 @@ function Hero() {
           allowFullScreen
         />
       </div>
-
-      {/* Mobile */}
       <div className="hero__mobile-wrap">
         <div className="hero__mobile-bg">
           <iframe
@@ -188,64 +161,31 @@ function Hero() {
   );
 }
 
-/* ── About Preview ── */
-function AboutPreview() {
-  const [ref, visible] = useReveal();
-  return (
-    <section className={`about-preview ${visible ? 'revealed' : ''}`} ref={ref}>
-      <div className="about-preview__left">
-        <p className="section-label">About Shine Digital</p>
-        <h2 className="about-preview__heading">
-          Building brands<br />that <em>stand out.</em>
-        </h2>
-        <p className="about-preview__body">
-          Shine Digital is a Mumbai based digital marketing and brand strategy
-          agency focused on helping businesses grow with clarity and purpose.
-          We help businesses define what they stand for, shape how they
-          communicate, and build a digital presence that people recognize
-          and trust.
-        </p>
-        <Link to="/about" className="btn-outline">
-          <span>Discover Our Story</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </Link>
-      </div>
-      <div className="about-preview__right">
-        <div className="about-preview__img-wrap">
-          <img src={collage} alt="Shine Digital collage" className="about-preview__img" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── Services ── */
 const SERVICES = [
   {
     num: '01', title: 'Social Media',
     desc: 'Strategy and content built to grow communities and earn attention. We help your brand show up consistently and meaningfully across every platform.',
     tags: ['Strategy', 'Content', 'Analytics'],
-    videoId: '69f75d191dfaccdc957d12f1', // ✅ was Website's, actually Social Media
+    videoId: '69f75d191dfaccdc957d12f1',
   },
   {
     num: '02', title: 'Branding',
-    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice every element built to last.',
+    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice — every element built to last.',
     tags: ['Identity', 'Typography', 'Voice'],
-    videoId: '69f75eef1dfaccdc957d3387', // ✅ was Films's, actually Branding
+    videoId: '69f75eef1dfaccdc957d3387',
   },
   {
     num: '03', title: 'Website',
     desc: 'Digital experiences that build trust and drive growth. Fast, beautiful, and built around your brand and your audience.',
     tags: ['Design', 'Dev', 'SEO'],
-    videoId: '69f75eef1dfaccdc957d338f', // ✅ was Branding's, actually Website
+    videoId: '69f75eef1dfaccdc957d338f',
   },
   {
     num: '04', title: 'Films',
     desc: 'Brand films and visual content that communicate your story with intention. From script to screen, we craft work people remember.',
     tags: ['Production', 'Direction', 'Edit'],
-    videoId: '69f75eef1dfaccdc957d3391', // ✅ was Social Media's, actually Films
+    videoId: '69f75eef1dfaccdc957d3391',
   },
 ];
 
@@ -271,8 +211,11 @@ function ServicesSection() {
         <p className="section-label">What We Do</p>
         <h2 className="svc-section__title">Our <em>Services</em></h2>
         <p className="svc-section__intro">
-          At Shine Digital, we believe every brand has its own light , our job is to make it shine brighter.
-          We are a Mumbai based digital marketing agency built by young, passionate creators and strategists. From storytelling to strategy, from design to data  we bring together creativity and performance to help businesses stand out in today’s competitive marketplace. </p>
+          At Shine Digital, we believe every brand has its own light — our job is to make it shine brighter.
+          We are a Mumbai based digital marketing agency built by young, passionate creators and strategists.
+          From storytelling to strategy, from design to data — we bring together creativity and performance
+          to help businesses stand out in today's competitive marketplace.
+        </p>
       </div>
 
       {/* Desktop */}
@@ -402,7 +345,6 @@ export default function Home() {
     <div className="home">
       {showIntro && <IntroSplash onFinished={() => setShowIntro(false)} />}
       <Hero />
-      <AboutPreview />
       <ServicesSection />
       <BrandsSection />
     </div>

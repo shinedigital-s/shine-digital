@@ -4,7 +4,6 @@ import './About.css';
 /* ─── Lenis smooth scroll ───────────────────────── */
 function useLenis() {
   useEffect(() => {
-    // Dynamically load Lenis from CDN
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js';
     script.onload = () => {
@@ -136,19 +135,6 @@ export default function About() {
             clarity and purpose.
           </p>
         </div>
-        <div className="about-hero__stats">
-          {[
-            { num: '50+', label: 'Brands Shaped' },
-            { num: '3+', label: 'Years Running' },
-            { num: '200+', label: 'Projects Delivered' },
-            { num: '∞', label: 'Ideas Generated' },
-          ].map((s, i) => (
-            <div key={i} className="about-stat" style={{ '--i': i }}>
-              <span className="about-stat__num">{s.num}</span>
-              <span className="about-stat__label">{s.label}</span>
-            </div>
-          ))}
-        </div>
       </section>
 
       <MarqueeBar />
@@ -223,7 +209,7 @@ export default function About() {
 
       <MarqueeBar />
 
-      {/* ── About Visual Block (mirrors homepage AboutPreview) ── */}
+      {/* ── About Visual Block ── */}
       <section className={`about-visual-section ${whatVisible ? 'revealed' : ''}`} ref={whatRef}>
         <div className="about-visual__left">
           <p className="section-label">What We Do</p>
@@ -247,7 +233,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Founders (kept as existing) ── */}
+      {/* ── Founders ── */}
       <section className={`founders-section ${foundersVisible ? 'revealed' : ''}`} ref={foundersRef}>
         <p className="section-label">The Minds Behind It</p>
         <h2 className="founders-section__heading">Our Founders</h2>
@@ -256,7 +242,7 @@ export default function About() {
             {
               name: 'Krisha Mehta',
               role: 'Co-Founder & Managing Director',
-              bio: "Krisha Mehta is a marketing professional with a Master’s degree from London and a refined background in business and fashion.",
+              bio: "Krisha Mehta is a marketing professional with a Master's degree from London and a refined background in business and fashion.",
             },
             {
               name: 'Savin Tuscano',

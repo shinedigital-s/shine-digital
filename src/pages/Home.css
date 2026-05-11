@@ -68,30 +68,15 @@
   pointer-events: none;
 }
 
-/* ── Cover-fill wrapper ── */
-/* The iframe is made larger than the viewport and centred,
-   so the video fills the screen like background-size: cover */
-.intro-cover {
+/* ── Video: fills screen like background-size: cover ── */
+.intro-splash__video {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-}
-
-.intro-cover iframe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /* For a 16:9 source: whichever dimension is "short", scale up to fill */
-  width:  max(100vw, calc(100vh * 16 / 9));
-  height: max(100vh, calc(100vw * 9  / 16));
-  transform: translate(-50%, -50%);
-  border: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
-
-/* Desktop visible by default, mobile hidden */
-.intro-cover--desktop { display: block; }
-.intro-cover--mobile  { display: none;  }
 
 /* ── Skip button ── */
 .intro-skip {
@@ -133,17 +118,7 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* ── Mobile: switch to portrait video ── */
 @media (max-width: 768px) {
-  .intro-cover--desktop { display: none;  }
-  .intro-cover--mobile  { display: block; }
-
-  /* On portrait screens the iframe cover formula reverses */
-  .intro-cover--mobile iframe {
-    width:  max(100vw, calc(100vh * 9 / 16));
-    height: max(100vh, calc(100vw * 16 / 9));
-  }
-
   .intro-skip {
     bottom: 1.5rem;
     right: 1.25rem;
