@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import collage from '../assets/collage.png';
 import './About.css';
 
 /* ─── Lenis smooth scroll ───────────────────────── */
@@ -223,32 +224,22 @@ export default function About() {
 
       <MarqueeBar />
 
-      {/* ── What We Do ── */}
-      <section className={`what-section ${whatVisible ? 'revealed' : ''}`} ref={whatRef}>
-        <div className="what-section__left">
+      {/* ── About Visual Block (mirrors homepage AboutPreview) ── */}
+      <section className={`about-visual-section ${whatVisible ? 'revealed' : ''}`} ref={whatRef}>
+        <div className="about-visual__left">
           <p className="section-label">What We Do</p>
-          <h2 className="what-section__heading">
+          <h2 className="about-visual__heading">
             We help brands<br />grow.
           </h2>
-          <p className="what-section__sub">
-            Through strategy, marketing, design, and digital experiences.
+          <p className="about-visual__sub">
+            Through strategy, marketing, design, and digital experiences —
+            we build brands that people recognize, trust, and remember.
           </p>
         </div>
-        <div className="what-section__right">
-          {[
-            'Brand Strategy & Positioning',
-            'Identity & Brand Design',
-            'Digital Marketing',
-            'Social Media & Content',
-            'Websites & Digital Experiences',
-            'Films & Visual Storytelling',
-          ].map((item, i) => (
-            <div key={i} className="what-item" style={{ '--i': i }}>
-              <span className="what-item__num">0{i + 1}</span>
-              <span className="what-item__text">{item}</span>
-              <span className="what-item__arrow">→</span>
-            </div>
-          ))}
+        <div className="about-visual__right">
+          <div className="about-visual__img-wrap">
+            <img src={collage} alt="Shine Digital work collage" className="about-visual__img" />
+          </div>
         </div>
       </section>
 

@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="footer__brand">
           <img src="/logo.jpeg" alt="Shine Digital" className="footer__logo" />
           <p className="footer__tagline">
-            We craft stories that <em>move</em> people.
+            Shine digitally with us.
           </p>
         </div>
 

@@ -249,8 +249,8 @@ function ServicesSection() {
         <p className="section-label">What We Do</p>
         <h2 className="svc-section__title">Our <em>Services</em></h2>
         <p className="svc-section__intro">
-          We help brands grow through strategy, marketing, design, and digital experiences.
-        </p>
+          At Shine Digital, we believe every brand has its own light , our job is to make it shine brighter.
+          We are a Mumbai based digital marketing agency built by young, passionate creators and strategists. From storytelling to strategy, from design to data  we bring together creativity and performance to help businesses stand out in today’s competitive marketplace. </p>
       </div>
 
       {/* Desktop */}
