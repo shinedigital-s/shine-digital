@@ -83,7 +83,7 @@ function JoinForm() {
       <button type="submit" className="form-submit">
         <span>Submit Application</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
     </form>
@@ -138,7 +138,7 @@ function EnquiryForm() {
       <button type="submit" className="form-submit">
         <span>Send Enquiry</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
     </form>
@@ -201,7 +201,7 @@ export default function Contact() {
             </h2>
             <p className="contact-forms__desc">
               {activeTab === 'enquiry'
-                ? "Tell us about your project and we'll put together a tailored plan. No generic proposals — just real strategy built around your goals."
+                ? "Tell us about your project and we'll put together a tailored plan. No generic proposals just real strategy built around your goals."
                 : "We're always looking for obsessive creatives who push boundaries. If that sounds like you, we'd love to hear from you."
               }
             </p>

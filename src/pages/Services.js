@@ -484,11 +484,13 @@ function HorizontalScrollSection({ onKnowMore, activeService }) {
                   <h3 className="svc-h-card__title">{s.title}</h3>
                   <p className="svc-h-card__tagline">{s.tagline}</p>
                 </div>
-                <p className="svc-h-card__desc">{s.desc}</p>
+                {/* flex-shrink:1 + overflow:hidden ensures desc never pushes CTA out */}
+                <p className="svc-h-card__desc" style={{ flexShrink: 1, overflow: 'hidden' }}>{s.desc}</p>
                 <ul className="svc-h-card__offerings">
                   {s.offerings.map((o, j) => <li key={j}>{o}</li>)}
                 </ul>
-                <div className="svc-h-card__cta">
+                {/* flex-shrink:0 + z-index:10 guarantees button is always visible */}
+                <div className="svc-h-card__cta" style={{ flexShrink: 0, position: 'relative', zIndex: 10 }}>
                   <button
                     className="svc-know-more-btn"
                     onClick={() => onKnowMore(s.title)}
@@ -536,7 +538,7 @@ export default function Services() {
             Everything your<br />brand <em>needs to SHINE.</em>
           </h1>
           <p className="svc-page-hero__sub">
-            Strategy, marketing, design, and digital experiences — built to
+            Strategy, marketing, design, and digital experiences built to
             help your business stand out and grow with purpose.
           </p>
         </div>

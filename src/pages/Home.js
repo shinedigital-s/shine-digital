@@ -74,7 +74,7 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
-/* ── Intro Splash (cinematic intro) ── */
+/* ── Intro Splash (cinematic full-screen intro) ── */
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
@@ -88,20 +88,24 @@ function IntroSplash({ onFinished }) {
   };
 
   useEffect(() => {
-    // Show skip button after 3 s
+    // Show skip after 3 s
     const skipTimer = setTimeout(() => setShowSkip(true), 3000);
 
-    // Auto-dismiss when video ends (postMessage from Gumlet)
+    // Auto-dismiss when Gumlet fires the 'ended' postMessage
     const handleMessage = (e) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        if (data?.event === 'ended' || data?.type === 'ended' || data?.action === 'ended') dismiss();
+        if (
+          data?.event === 'ended' ||
+          data?.type === 'ended' ||
+          data?.action === 'ended'
+        ) dismiss();
       } catch (_) { }
     };
     window.addEventListener('message', handleMessage);
 
-    // Hard fallback — dismiss after 20 s no matter what
-    const fallback = setTimeout(() => dismiss(), 20000);
+    // Hard fallback — dismiss after 25 s if postMessage never fires
+    const fallback = setTimeout(() => dismiss(), 25000);
 
     return () => {
       window.removeEventListener('message', handleMessage);
@@ -113,29 +117,27 @@ function IntroSplash({ onFinished }) {
   return (
     <div className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}>
 
-      {/* ── Desktop: full-screen 16:9 ── */}
-      <div className="intro-splash__frame intro-splash__frame--desktop">
+      {/* Cover-fill desktop iframe */}
+      <div className="intro-cover intro-cover--desktop">
         <iframe
-          src="https://play.gumlet.io/embed/69fb70b1c24b7e4dd498c367?preload=true&autoplay=true&loop=false&background=true&muted=false&disable_player_controls=true"
-          referrerPolicy="origin"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          src="https://play.gumlet.io/embed/69fb70b1c24b7e4dd498c367?preload=true&autoplay=true&loop=false&background=true&muted=true&disable_player_controls=true"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
           allowFullScreen
-          title="Intro Desktop"
+          title="Intro"
         />
       </div>
 
-      {/* ── Mobile: full-screen portrait ── */}
-      <div className="intro-splash__frame intro-splash__frame--mobile">
+      {/* Cover-fill mobile iframe */}
+      <div className="intro-cover intro-cover--mobile">
         <iframe
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=true&muted=true&disable_player_controls=true"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
           title="Intro Mobile"
-          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=true&muted=false&disable_player_controls=true"
-          referrerPolicy="origin"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
-          allowFullScreen
         />
       </div>
 
-      {/* ── Skip button (appears after 3 s) ── */}
+      {/* Skip button — fades in after 3 s */}
       <button
         className={`intro-skip ${showSkip ? 'intro-skip--visible' : ''}`}
         onClick={dismiss}
@@ -149,6 +151,7 @@ function IntroSplash({ onFinished }) {
     </div>
   );
 }
+
 
 /* ── Hero ── */
 function Hero() {
@@ -228,7 +231,7 @@ const SERVICES = [
   },
   {
     num: '02', title: 'Branding',
-    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice — every element built to last.',
+    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice every element built to last.',
     tags: ['Identity', 'Typography', 'Voice'],
     videoId: '69f75eef1dfaccdc957d3387', // ✅ was Films's, actually Branding
   },

@@ -185,7 +185,7 @@ export default function About() {
           <p className="section-label">Our Vision</p>
           <h2>
             To help businesses grow into <em>strong and recognizable brands</em> in
-            the digital world — creating digital experiences that build
+            the digital world creating digital experiences that build
             trust, credibility, and long term value.
           </h2>
         </div>
@@ -193,7 +193,7 @@ export default function About() {
           <p className="section-label">Our Mission</p>
           <h2>
             To support businesses through thoughtful strategy, creative
-            execution, and effective digital marketing — combining design,
+            execution, and effective digital marketing combining design,
             technology, and communication to <em>achieve sustainable growth.</em>
           </h2>
         </div>
@@ -213,7 +213,7 @@ export default function About() {
           <p className="perspective-section__body">
             When a brand has clarity in its identity, message, and purpose,
             every digital effort becomes more meaningful. We look beyond
-            individual campaigns or platforms — our focus is on shaping a
+            individual campaigns or platforms our focus is on shaping a
             brand's overall presence so that every website, piece of content,
             and marketing effort works together to create a clear and
             lasting impression.
@@ -231,7 +231,7 @@ export default function About() {
             We help brands<br />grow.
           </h2>
           <p className="about-visual__sub">
-            Through strategy, marketing, design, and digital experiences —
+            Through strategy, marketing, design, and digital experiences
             we build brands that people recognize, trust, and remember.
           </p>
         </div>

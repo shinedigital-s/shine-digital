@@ -269,10 +269,30 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Guarantee CTA + button are always visible above overlay */
+.svc-h-card__cta {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.svc-know-more-btn {
+  position: relative;
+  z-index: 10;
+  pointer-events: all;
+}
+
+/* Prevent desc from pushing CTA out of card bounds */
+.svc-h-card__desc {
+  overflow: hidden;
+  flex-shrink: 1;
 }
 
 .svc-detail-close {

@@ -235,7 +235,7 @@ export default function Careers() {
                     </h1>
                     <p className="careers-hero__sub">
                         We are not looking for people who want a job. We are looking
-                        for people who want to build something. If that's you — read on.
+                        for people who want to build something. If that's you read on.
                     </p>
                     <a href="#apply" className="careers-hero__cta">
                         <span>Apply Now</span>
@@ -265,7 +265,7 @@ export default function Careers() {
                     </h2>
                     <p className="careers-why__sub">
                         We built Shine Digital because we wanted to do things differently.
-                        That spirit lives in how we work — and who we work with.
+                        That spirit lives in how we work and who we work with.
                     </p>
                 </div>
                 <div className="careers-why__grid">
@@ -287,7 +287,7 @@ export default function Careers() {
                     <p className="section-label">Open Roles</p>
                     <h2>We are always looking for<br /><em>exceptional people.</em></h2>
                     <p>
-                        We hire across all levels — from fresh graduates to seasoned
+                        We hire across all levels from fresh graduates to seasoned
                         creatives. If you are sharp, hungry, and ready to do the best
                         work of your life, there is a place for you here.
                     </p>
@@ -313,7 +313,7 @@ export default function Careers() {
                     </h2>
                     <p className="careers-apply__sub">
                         Drop us your details and tell us what you want to build.
-                        We read every application ourselves — no bots, no filters.
+                        We read every application ourselves no bots, no filters.
                     </p>
                 </div>
                 <ApplicationForm />

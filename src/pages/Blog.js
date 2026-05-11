@@ -18,7 +18,7 @@ export default function Blog() {
             Under<br /><em>Construction.</em>
           </h1>
           <p className="blog-maintenance__sub">
-            We're crafting something worth reading. Check back soon — 
+            We're crafting something worth reading. Check back soon.
             ideas, stories, and perspectives from the minds at Shine Digital.
           </p>
           <div className="blog-maintenance__dots">
