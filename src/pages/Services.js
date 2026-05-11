@@ -45,7 +45,7 @@ const SERVICE_DETAILS = {
       body: `From strategy to execution, Shine Digital handles everything — content calendars, copywriting, creative design, reels, and engagement. We create scroll-stopping visuals and meaningful interactions that build loyal communities around your brand.`,
     },
     whyUs: {
-      heading: "Why Choose SD Digital Marketing Agency?",
+      heading: 'Why Choose SD Digital Marketing Agency?',
       sub: "We don't just post, we grow your brand.",
       body: `Whether you're a startup, small business, or enterprise, our team ensures your social media becomes a revenue-driving channel.`,
       points: [
@@ -106,9 +106,9 @@ const SERVICE_DETAILS = {
       },
     ],
     cta: {
+      pre: 'Ready to grow your brand through social media?',
       heading: "Let's Build Your Social Presence Together",
       sub: 'SD Digital Marketing Agency — Social Media Marketing That Drives Real Results',
-      btn: 'Ready to grow your brand through social media?',
     },
   },
 
@@ -145,12 +145,12 @@ const SERVICE_DETAILS = {
       heading: 'Our Branding Process',
       sub: 'Simple, structured, and effective.',
       steps: [
-        { title: 'Discovery & Research', desc: '' },
-        { title: 'Brand Strategy Creation', desc: '' },
-        { title: 'Logo Concepts & Brand Kit Design', desc: '' },
-        { title: 'Visual Identity Development', desc: '' },
-        { title: 'Marketing Collaterals & Packaging Design', desc: '' },
-        { title: 'Final Delivery of All Assets', desc: '' },
+        { title: 'Discovery & Research' },
+        { title: 'Brand Strategy Creation' },
+        { title: 'Logo Concepts & Brand Kit Design' },
+        { title: 'Visual Identity Development' },
+        { title: 'Marketing Collaterals & Packaging Design' },
+        { title: 'Final Delivery of All Assets' },
       ],
       outcome: 'A brand that stands out, speaks clearly, and builds trust from the very first glance.',
     },
@@ -187,7 +187,7 @@ const SERVICE_DETAILS = {
     },
   },
 
-  'Films': null, // empty for now
+  'Films': null,
 };
 
 /* ─────────────────────────────────────────
@@ -264,7 +264,7 @@ function FaqItem({ q, a }) {
 }
 
 /* ─────────────────────────────────────────
-   Detail panel content per service
+   Detail panel content — Website
 ───────────────────────────────────────── */
 function WebsiteDetail({ d }) {
   return (
@@ -282,16 +282,17 @@ function WebsiteDetail({ d }) {
   );
 }
 
+/* ─────────────────────────────────────────
+   Detail panel content — Social Media
+───────────────────────────────────────── */
 function SocialMediaDetail({ d }) {
   return (
     <>
-      {/* Intro */}
       <div className="svc-detail-intro">
         <h2 className="svc-detail-big-heading">{d.intro.heading}</h2>
         <p className="svc-detail-body">{d.intro.body}</p>
       </div>
 
-      {/* Why Us */}
       <div className="svc-detail-why">
         <h3 className="svc-detail-section-title">{d.whyUs.heading}</h3>
         <p className="svc-detail-tagline-sm">{d.whyUs.sub}</p>
@@ -301,7 +302,6 @@ function SocialMediaDetail({ d }) {
         </ul>
       </div>
 
-      {/* Offerings */}
       <div className="svc-detail-offerings">
         <h3 className="svc-detail-section-title">{d.offerings.heading}</h3>
         <ul className="svc-detail-bullet-list">
@@ -309,13 +309,11 @@ function SocialMediaDetail({ d }) {
         </ul>
       </div>
 
-      {/* Focus */}
       <div className="svc-detail-focus">
         <h3 className="svc-detail-section-title">{d.focus.heading}</h3>
         <p className="svc-detail-body">{d.focus.body}</p>
       </div>
 
-      {/* Process */}
       <div className="svc-detail-process">
         <h3 className="svc-detail-section-title">{d.process.heading}</h3>
         <ol className="svc-detail-steps">
@@ -328,15 +326,13 @@ function SocialMediaDetail({ d }) {
         </ol>
       </div>
 
-      {/* FAQs */}
       <div className="svc-detail-faqs">
         <h3 className="svc-detail-section-title">FAQs</h3>
         {d.faqs.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
       </div>
 
-      {/* CTA */}
       <div className="svc-detail-cta">
-        <p className="svc-detail-cta-pre">{d.cta.btn}</p>
+        <p className="svc-detail-cta-pre">{d.cta.pre}</p>
         <h2 className="svc-detail-cta-heading">{d.cta.heading}</h2>
         <p className="svc-detail-cta-sub">{d.cta.sub}</p>
         <a href="/contact" className="svc-detail-cta-btn">Get Started</a>
@@ -345,19 +341,20 @@ function SocialMediaDetail({ d }) {
   );
 }
 
+/* ─────────────────────────────────────────
+   Detail panel content — Branding
+───────────────────────────────────────── */
 function BrandingDetail({ d }) {
   return (
     <>
-      {/* Intro */}
       <div className="svc-detail-intro">
         <h2 className="svc-detail-big-heading">{d.intro.heading}</h2>
         <p className="svc-detail-body">{d.intro.body}</p>
-        <ul className="svc-detail-bullet-list">
+        <ul className="svc-detail-bullet-list" style={{ marginTop: '1.25rem' }}>
           {d.ourBrandingHelps.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       </div>
 
-      {/* Services */}
       <div className="svc-detail-offerings">
         <h3 className="svc-detail-section-title">Services:</h3>
         <ul className="svc-detail-bullet-list">
@@ -365,7 +362,6 @@ function BrandingDetail({ d }) {
         </ul>
       </div>
 
-      {/* Why Us */}
       <div className="svc-detail-why">
         <h3 className="svc-detail-section-title">{d.whyUs.heading}</h3>
         <ul className="svc-detail-bullet-list">
@@ -374,7 +370,6 @@ function BrandingDetail({ d }) {
         <p className="svc-detail-tagline-sm" style={{ marginTop: '1.5rem' }}>{d.whyUs.tagline}</p>
       </div>
 
-      {/* Process */}
       <div className="svc-detail-process">
         <h3 className="svc-detail-section-title">{d.process.heading}</h3>
         <p className="svc-detail-tagline-sm">{d.process.sub}</p>
@@ -384,17 +379,16 @@ function BrandingDetail({ d }) {
           ))}
         </ol>
         <div className="svc-detail-outcome">
-          <span>Outcome:</span> {d.process.outcome}
+          <span>Outcome:</span>
+          {d.process.outcome}
         </div>
       </div>
 
-      {/* FAQs */}
       <div className="svc-detail-faqs">
         <h3 className="svc-detail-section-title">FAQs</h3>
         {d.faqs.map((f, i) => <FaqItem key={i} q={f.q} a={f.a} />)}
       </div>
 
-      {/* CTA */}
       <div className="svc-detail-cta">
         <h2 className="svc-detail-cta-heading">{d.cta.heading}</h2>
         <p className="svc-detail-cta-sub">{d.cta.sub}</p>
@@ -405,13 +399,12 @@ function BrandingDetail({ d }) {
 }
 
 /* ─────────────────────────────────────────
-   Service Detail Panel (full-width below cards)
+   Service Detail Panel
 ───────────────────────────────────────── */
 function ServiceDetailPanel({ title, onClose }) {
   const d = SERVICE_DETAILS[title];
 
   if (!d) {
-    // Films — empty for now
     return (
       <div className="svc-detail-panel">
         <button className="svc-detail-close" onClick={onClose}>✕ Close</button>
@@ -437,7 +430,7 @@ function ServiceDetailPanel({ title, onClose }) {
 /* ─────────────────────────────────────────
    Horizontal scroll section
 ───────────────────────────────────────── */
-function HorizontalScrollSection({ onKnowMore }) {
+function HorizontalScrollSection({ onKnowMore, activeService }) {
   const trackRef = useRef(null);
   const sectionRef = useRef(null);
 
@@ -459,8 +452,7 @@ function HorizontalScrollSection({ onKnowMore }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const totalCards = SERVICES_DATA.length;
-  const sectionHeight = `${100 + totalCards * 60}vh`;
+  const sectionHeight = `${100 + SERVICES_DATA.length * 60}vh`;
 
   return (
     <section className="horiz-section" ref={sectionRef} style={{ height: sectionHeight }}>
@@ -485,7 +477,6 @@ function HorizontalScrollSection({ onKnowMore }) {
                     title={s.title}
                   />
                 </div>
-                {/* Overlay */}
                 <div className="svc-h-card__overlay" />
 
                 <div className="svc-h-card__num">{s.id}</div>
@@ -495,16 +486,17 @@ function HorizontalScrollSection({ onKnowMore }) {
                 </div>
                 <p className="svc-h-card__desc">{s.desc}</p>
                 <ul className="svc-h-card__offerings">
-                  {s.offerings.map((o, j) => (
-                    <li key={j}>{o}</li>
-                  ))}
+                  {s.offerings.map((o, j) => <li key={j}>{o}</li>)}
                 </ul>
                 <div className="svc-h-card__cta">
                   <button
                     className="svc-know-more-btn"
                     onClick={() => onKnowMore(s.title)}
                   >
-                    Know More <span className="svc-know-more-arrow">↓</span>
+                    {activeService === s.title ? 'Close' : 'Know More'}
+                    <span className="svc-know-more-arrow">
+                      {activeService === s.title ? '↑' : '↓'}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -527,17 +519,12 @@ export default function Services() {
   const handleKnowMore = (title) => {
     if (activeService === title) {
       setActiveService(null);
-    } else {
-      setActiveService(title);
-      // scroll to detail panel after state update
-      setTimeout(() => {
-        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      return;
     }
-  };
-
-  const handleClose = () => {
-    setActiveService(null);
+    setActiveService(title);
+    setTimeout(() => {
+      detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   return (
@@ -546,7 +533,7 @@ export default function Services() {
         <div className="svc-page-hero__inner">
           <p className="section-label">Services</p>
           <h1 className="svc-page-hero__title">
-            Everything your<br />brand <em>needs to grow.</em>
+            Everything your<br />brand <em>needs to SHINE.</em>
           </h1>
           <p className="svc-page-hero__sub">
             Strategy, marketing, design, and digital experiences — built to
@@ -555,12 +542,18 @@ export default function Services() {
         </div>
       </section>
 
-      <HorizontalScrollSection onKnowMore={handleKnowMore} />
+      <HorizontalScrollSection
+        onKnowMore={handleKnowMore}
+        activeService={activeService}
+      />
 
       {/* Detail panel renders below the scroll section */}
       <div ref={detailRef}>
         {activeService && (
-          <ServiceDetailPanel title={activeService} onClose={handleClose} />
+          <ServiceDetailPanel
+            title={activeService}
+            onClose={() => setActiveService(null)}
+          />
         )}
       </div>
     </div>

@@ -74,19 +74,24 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
-/* ── Intro Splash ── */
+/* ── Intro Splash (cinematic intro) ── */
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
+  const [showSkip, setShowSkip] = useState(false);
   const fadingRef = useRef(false);
 
   const dismiss = () => {
     if (fadingRef.current) return;
     fadingRef.current = true;
     setFading(true);
-    setTimeout(() => onFinished(), 800);
+    setTimeout(() => onFinished(), 900);
   };
 
   useEffect(() => {
+    // Show skip button after 3 s
+    const skipTimer = setTimeout(() => setShowSkip(true), 3000);
+
+    // Auto-dismiss when video ends (postMessage from Gumlet)
     const handleMessage = (e) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
@@ -94,39 +99,53 @@ function IntroSplash({ onFinished }) {
       } catch (_) { }
     };
     window.addEventListener('message', handleMessage);
+
+    // Hard fallback — dismiss after 20 s no matter what
     const fallback = setTimeout(() => dismiss(), 20000);
-    return () => { window.removeEventListener('message', handleMessage); clearTimeout(fallback); };
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(fallback);
+      clearTimeout(skipTimer);
+    };
   }, []);
 
   return (
     <div className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}>
-      {/* Desktop 16:9 */}
+
+      {/* ── Desktop: full-screen 16:9 ── */}
       <div className="intro-splash__frame intro-splash__frame--desktop">
         <iframe
-          src="https://play.gumlet.io/embed/69fb70b1c24b7e4dd498c367?preload=true&autoplay=true&loop=false&background=false&muted=false&disable_player_controls=true"
+          src="https://play.gumlet.io/embed/69fb70b1c24b7e4dd498c367?preload=true&autoplay=true&loop=false&background=true&muted=false&disable_player_controls=true"
           referrerPolicy="origin"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
           allowFullScreen
           title="Intro Desktop"
         />
-        <div className="intro-splash__tap" onClick={dismiss} />
       </div>
 
-      {/* Mobile 9:16 */}
-      <div className="intro-splash__frame intro-splash__frame--mobile" onClick={dismiss}>
-        <div className="intro-splash__mobile-vid" onClick={(e) => e.stopPropagation()}>
-          <iframe
-            loading="lazy"
-            title="Intro Mobile"
-            src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?background=false&autoplay=false&loop=false&muted=false&disable_player_controls=false"
-            style={{ border: 'none', position: 'absolute', top: 0, left: 0, height: '100%', width: '100%' }}
-            referrerPolicy="origin"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
-            allowFullScreen
-          />
-        </div>
-        <span className="intro-splash__skip-hint">Tap outside to skip</span>
+      {/* ── Mobile: full-screen portrait ── */}
+      <div className="intro-splash__frame intro-splash__frame--mobile">
+        <iframe
+          title="Intro Mobile"
+          src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84952?preload=true&autoplay=true&loop=false&background=true&muted=false&disable_player_controls=true"
+          referrerPolicy="origin"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+          allowFullScreen
+        />
       </div>
+
+      {/* ── Skip button (appears after 3 s) ── */}
+      <button
+        className={`intro-skip ${showSkip ? 'intro-skip--visible' : ''}`}
+        onClick={dismiss}
+        aria-label="Skip intro"
+      >
+        Skip
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
     </div>
   );
 }

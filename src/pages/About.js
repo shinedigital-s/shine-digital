@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import collage from '../assets/collage.png';
 import './About.css';
 
 /* ─── Lenis smooth scroll ───────────────────────── */
@@ -237,8 +236,13 @@ export default function About() {
           </p>
         </div>
         <div className="about-visual__right">
-          <div className="about-visual__img-wrap">
-            <img src={collage} alt="Shine Digital work collage" className="about-visual__img" />
+          <div className="about-visual__vid-wrap">
+            <iframe
+              src="https://play.gumlet.io/embed/69f245fa9c68b6349ab356ab?background=false&autoplay=true&loop=true&muted=true&disable_player_controls=false&preload=true"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+              allowFullScreen
+              title="Shine Digital About Video"
+            />
           </div>
         </div>
       </section>
@@ -251,13 +255,13 @@ export default function About() {
           {[
             {
               name: 'Krisha Mehta',
-              role: 'Co-Founder & Creative Director',
-              bio: "The visual brain. Krisha turns brand stories into stunning content — from strategy to execution, she's the one making it look effortless.",
+              role: 'Co-Founder & Managing Director',
+              bio: "Krisha Mehta is a marketing professional with a Master’s degree from London and a refined background in business and fashion.",
             },
             {
-              name: 'Savin Furtado',
-              role: 'Co-Founder & Director of Films',
-              bio: 'The storyteller. Savin crafts cinematic narratives that connect brands with people on a deeply human level. Every frame, intentional.',
+              name: 'Savin Tuscano',
+              role: 'Co-Founder',
+              bio: 'Savin Tuscano is an experienced Director, Writer, and Producer with a strong and diverse background in the entertainment industry.',
             },
           ].map((f, i) => (
             <div key={i} className="founder-card" style={{ '--i': i }}>
