@@ -1,45 +1,56 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import collage from '../assets/collage.png';
-import introVideo from '../assets/logo before website loading.mp4';
 import './Home.css';
 
 /* ─── Logo imports ─────────────────────────────────────────────────────── */
-import boehringer from '../assets/logos/boehringer-ingelheim.svg';
-import britannia from '../assets/logos/britannia-industries-logo.svg';
-import cadbury from '../assets/logos/cadbury.svg';
-import cipla from '../assets/logos/cipla-logo.svg';
-import drReddys from '../assets/logos/dr.reddys.png';
+import boehringer    from '../assets/logos/boehringer-ingelheim.svg';
+import britannia     from '../assets/logos/britannia-industries-logo.svg';
+import cadbury       from '../assets/logos/cadbury.svg';
+import cipla         from '../assets/logos/cipla-logo.svg';
+import drReddys      from '../assets/logos/dr.reddys.png';
 import generalMotors from '../assets/logos/general-motors.svg';
 import hindustanTimes from '../assets/logos/hindustan-times.png';
-import iball from '../assets/logos/iball.png';
-import indiaToday from '../assets/logos/india-today.png';
-import kelloggs from '../assets/logos/kellogg-s.svg';
-import maggi from '../assets/logos/maggi.png';
-import mahindra from '../assets/logos/mahindra-mahindra-logo.svg';
-import novartis from '../assets/logos/novartis.svg';
-import shell from '../assets/logos/shell-4.svg';
-import sbi from '../assets/logos/state-bank-of-india.svg';
-import surfExcel from '../assets/logos/surf excel.png';
+import iball         from '../assets/logos/iball.png';
+import indiaToday    from '../assets/logos/india-today.png';
+import kelloggs      from '../assets/logos/kellogg-s.svg';
+import maggi         from '../assets/logos/maggi.png';
+import mahindra      from '../assets/logos/mahindra-mahindra-logo.svg';
+import novartis      from '../assets/logos/novartis.svg';
+import shell         from '../assets/logos/shell-4.svg';
+import sbi           from '../assets/logos/state-bank-of-india.svg';
+import surfExcel     from '../assets/logos/surf excel.png';
 
 const BRANDS = [
-  { name: 'Maggi', src: maggi },
-  { name: 'Cadbury', src: cadbury },
-  { name: "Kellogg's", src: kelloggs },
-  { name: 'Britannia', src: britannia },
-  { name: 'Surf Excel', src: surfExcel },
-  { name: 'General Motors', src: generalMotors },
-  { name: 'Mahindra', src: mahindra },
-  { name: "Dr. Reddy's", src: drReddys },
-  { name: 'Cipla', src: cipla },
-  { name: 'Novartis', src: novartis },
-  { name: 'Boehringer Ingelheim', src: boehringer },
-  { name: 'SBI', src: sbi },
-  { name: 'India Today', src: indiaToday },
-  { name: 'Hindustan Times', src: hindustanTimes },
-  { name: 'iBall', src: iball },
-  { name: 'Shell', src: shell },
+  { name: 'Maggi',              src: maggi         },
+  { name: 'Cadbury',            src: cadbury       },
+  { name: "Kellogg's",          src: kelloggs      },
+  { name: 'Britannia',          src: britannia     },
+  { name: 'Surf Excel',         src: surfExcel     },
+  { name: 'General Motors',     src: generalMotors },
+  { name: 'Mahindra',           src: mahindra      },
+  { name: "Dr. Reddy's",        src: drReddys      },
+  { name: 'Cipla',              src: cipla         },
+  { name: 'Novartis',           src: novartis      },
+  { name: 'Boehringer Ingelheim', src: boehringer  },
+  { name: 'SBI',                src: sbi           },
+  { name: 'India Today',        src: indiaToday    },
+  { name: 'Hindustan Times',    src: hindustanTimes},
+  { name: 'iBall',              src: iball         },
+  { name: 'Shell',              src: shell         },
 ];
+
+/* ── Video IDs ── */
+const MOBILE_INTRO_VIDEO_ID  = '69f50596c530a8d6d2d84952';
+const DESKTOP_INTRO_VIDEO_ID = '69fb70b1c24b7e4dd498c367';
+
+/* How many ms to wait before auto-dismissing the intro as a fallback.
+   Set this to your actual video duration + ~1 500 ms buffer. */
+const INTRO_FALLBACK_MS = 12000;
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HOOKS
+═══════════════════════════════════════════════════════════════════════ */
 
 /* ── Lenis Smooth Scroll ── */
 function useLenis() {
@@ -75,43 +86,56 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
-/* ── Intro Splash ── */
-const MOBILE_INTRO_VIDEO_ID = '69f50596c530a8d6d2d84952';
-const DESKTOP_INTRO_VIDEO_ID = '69fb70b1c24b7e4dd498c367';
-
+/* ═══════════════════════════════════════════════════════════════════════
+   INTRO SPLASH
+═══════════════════════════════════════════════════════════════════════ */
 function IntroSplash({ onFinished }) {
-  const [fading, setFading] = useState(false);
-  const fadingRef = useRef(false);
-  const isMobile = window.innerWidth <= 768;
-  const videoId = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
+  const [fading, setFading]   = useState(false);
+  const dismissedRef          = useRef(false);
+  const isMobile              = window.innerWidth <= 768;
+  const videoId               = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
 
   const dismiss = () => {
-    if (fadingRef.current) return;
-    fadingRef.current = true;
+    if (dismissedRef.current) return;
+    dismissedRef.current = true;
     setFading(true);
-    setTimeout(() => onFinished(), 800);
+    /* Wait for the CSS opacity transition (0.9 s) then fully unmount */
+    setTimeout(() => onFinished(), 950);
   };
 
   useEffect(() => {
-    // Listen for Gumlet's postMessage when the video ends — fade immediately
+    /* 1 ── Gumlet postMessage "ended" — covers every known event shape */
     const handleMessage = (e) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
         if (!data) return;
-        // Cover all known Gumlet event shapes
-        const evt = data.event || data.type || (data.player && data.player.event) || '';
-        if (evt === 'ended' || evt === 'player:ended' || evt === 'video:ended') {
+        const evt =
+          data.event                          ||
+          data.type                           ||
+          data.name                           ||
+          (data.player && data.player.event)  ||
+          (data.data   && data.data.event)    || '';
+        if (['ended', 'player:ended', 'video:ended', 'complete', 'finish'].includes(evt)) {
           dismiss();
         }
       } catch (_) {}
     };
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+
+    /* 2 ── Hard fallback — auto-dismiss after INTRO_FALLBACK_MS */
+    const fallback = setTimeout(dismiss, INTRO_FALLBACK_MS);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(fallback);
+    };
   }, []);
 
   return (
-    <div className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}>
-      {/* Gumlet iframe — autoplay with audio on, no player controls */}
+    <div
+      className={`intro-splash${fading ? ' intro-splash--fade' : ''}`}
+      onClick={dismiss}          /* tap / click anywhere also skips */
+    >
       <iframe
         className="intro-splash__iframe"
         src={`https://play.gumlet.io/embed/${videoId}?autoplay=true&loop=false&muted=false&disable_player_controls=true&background=false`}
@@ -123,11 +147,13 @@ function IntroSplash({ onFinished }) {
   );
 }
 
-
-/* ── Hero ── */
+/* ═══════════════════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════════════════ */
 function Hero() {
   return (
     <section className="hero">
+      {/* Desktop */}
       <div className="hero__gumlet hero__gumlet--desktop">
         <iframe
           loading="lazy"
@@ -138,6 +164,8 @@ function Hero() {
           allowFullScreen
         />
       </div>
+
+      {/* Mobile */}
       <div className="hero__mobile-wrap">
         <div className="hero__mobile-bg">
           <iframe
@@ -156,7 +184,59 @@ function Hero() {
   );
 }
 
-/* ── Services ── */
+/* ═══════════════════════════════════════════════════════════════════════
+   ABOUT US
+═══════════════════════════════════════════════════════════════════════ */
+function AboutSection() {
+  const [ref, visible] = useReveal(0.1);
+
+  return (
+    <section className={`about-section${visible ? ' revealed' : ''}`} ref={ref}>
+      {/* ── Left: copy ── */}
+      <div className="about-section__left">
+        <p className="section-label">About Us</p>
+
+        <h2 className="about-section__heading">
+          Every brand has<br />
+          its own <em>light</em> —<br />
+          our job is to make<br />
+          it <em>shine brighter.</em>
+        </h2>
+
+        <p className="about-section__body">
+          We are a Mumbai-based digital marketing agency built by young,
+          passionate creators and strategists. From storytelling to strategy,
+          from design to data — we bring together creativity and performance
+          to help businesses stand out in today's competitive marketplace.
+        </p>
+
+        <Link to="/about" className="btn-outline about-section__cta">
+          <span>Our Story</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
+      </div>
+
+      {/* ── Right: image ── */}
+      <div className="about-section__right">
+        <div className="about-section__img-wrap">
+          <img
+            src={collage}
+            alt="Shine Digital collage"
+            className="about-section__img"
+            draggable={false}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SERVICES
+═══════════════════════════════════════════════════════════════════════ */
 const SERVICES = [
   {
     num: '01', title: 'Social Media',
@@ -186,8 +266,8 @@ const SERVICES = [
 
 function ServicesSection() {
   const [activeIdx, setActiveIdx] = useState(0);
-  const sectionRef = useRef(null);
-  const cardRefs = useRef([]);
+  const sectionRef  = useRef(null);
+  const cardRefs    = useRef([]);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -205,15 +285,9 @@ function ServicesSection() {
       <div className="svc-section__header">
         <p className="section-label">What We Do</p>
         <h2 className="svc-section__title">Our <em>Services</em></h2>
-        <p className="svc-section__intro">
-          At Shine Digital, we believe every brand has its own light — our job is to make it shine brighter.
-          We are a Mumbai based digital marketing agency built by young, passionate creators and strategists.
-          From storytelling to strategy, from design to data — we bring together creativity and performance
-          to help businesses stand out in today's competitive marketplace.
-        </p>
       </div>
 
-      {/* Desktop */}
+      {/* ── Desktop layout ── */}
       <div className="svc-section__inner">
         <div className="svc-left">
           <div className="svc-left__card">
@@ -236,7 +310,10 @@ function ServicesSection() {
           </div>
           <div className="svc-left__progress">
             {SERVICES.map((_, i) => (
-              <div key={i} className={`svc-progress-dot ${activeIdx === i ? 'active' : activeIdx > i ? 'past' : ''}`} />
+              <div
+                key={i}
+                className={`svc-progress-dot ${activeIdx === i ? 'active' : activeIdx > i ? 'past' : ''}`}
+              />
             ))}
           </div>
         </div>
@@ -245,7 +322,7 @@ function ServicesSection() {
           {SERVICES.map((s, i) => (
             <div
               key={i}
-              className={`svc-card ${activeIdx === i ? 'active' : ''}`}
+              className={`svc-card${activeIdx === i ? ' active' : ''}`}
               data-idx={i}
               ref={(el) => (cardRefs.current[i] = el)}
             >
@@ -267,7 +344,7 @@ function ServicesSection() {
         </div>
       </div>
 
-      {/* Mobile */}
+      {/* ── Mobile layout ── */}
       <div className="svc-mobile">
         {SERVICES.map((s, i) => (
           <div key={i} className="svc-mobile__item">
@@ -299,13 +376,15 @@ function ServicesSection() {
   );
 }
 
-/* ── Brands ── */
+/* ═══════════════════════════════════════════════════════════════════════
+   BRANDS
+═══════════════════════════════════════════════════════════════════════ */
 function BrandsSection() {
   const [ref, visible] = useReveal(0.1);
   const track = [...BRANDS, ...BRANDS];
 
   return (
-    <section className={`brands-section ${visible ? 'revealed' : ''}`} ref={ref}>
+    <section className={`brands-section${visible ? ' revealed' : ''}`} ref={ref}>
       <p className="section-label">Trusted By</p>
       <h2 className="brands-section__heading">Brands We've Shaped</h2>
       <div className="brands-marquee">
@@ -326,7 +405,9 @@ function BrandsSection() {
   );
 }
 
-/* ── Home ── */
+/* ═══════════════════════════════════════════════════════════════════════
+   HOME
+═══════════════════════════════════════════════════════════════════════ */
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
   useLenis();
@@ -338,10 +419,20 @@ export default function Home() {
 
   return (
     <div className="home">
-      {showIntro && <IntroSplash onFinished={() => setShowIntro(false)} />}
+      {/*
+        Hero (and every other section) renders immediately underneath the splash.
+        The splash is position:fixed z-index:9999 so it covers everything.
+        When it fades to opacity:0, the hero beneath becomes visible.
+      */}
       <Hero />
+      <AboutSection />
       <ServicesSection />
       <BrandsSection />
+
+      {/* Mounted on top; removed from DOM only after the fade-out finishes */}
+      {showIntro && (
+        <IntroSplash onFinished={() => setShowIntro(false)} />
+      )}
     </div>
   );
 }
