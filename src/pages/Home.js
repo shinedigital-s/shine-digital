@@ -93,25 +93,20 @@ function IntroSplash({ onFinished }) {
   };
 
   useEffect(() => {
-    // Fallback auto-dismiss after 60 s in case postMessage never fires
-    const fallback = setTimeout(() => dismiss(), 60000);
-
-    // Gumlet broadcasts postMessage when the video ends — catch it and fade out
+    // Listen for Gumlet's postMessage when the video ends — fade immediately
     const handleMessage = (e) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        // Gumlet fires { event: 'ended' } or { type: 'ended' }
-        if (data && (data.event === 'ended' || data.type === 'ended')) {
+        if (!data) return;
+        // Cover all known Gumlet event shapes
+        const evt = data.event || data.type || (data.player && data.player.event) || '';
+        if (evt === 'ended' || evt === 'player:ended' || evt === 'video:ended') {
           dismiss();
         }
       } catch (_) {}
     };
     window.addEventListener('message', handleMessage);
-
-    return () => {
-      clearTimeout(fallback);
-      window.removeEventListener('message', handleMessage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   return (
