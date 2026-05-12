@@ -88,7 +88,7 @@ function useReveal(threshold = 0.15) {
      • Fully unmounts at 1 900 ms total — no tap/click interaction.
 ═══════════════════════════════════════════════════════════════════════ */
 // Set this to your exact video length in ms (e.g. 4s video = 4000)
-const INTRO_DURATION_MS = 4000;
+const INTRO_DURATION_MS = 5000;
 
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
