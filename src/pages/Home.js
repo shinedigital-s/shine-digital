@@ -81,7 +81,6 @@ const DESKTOP_INTRO_VIDEO_ID = '69fb70b1c24b7e4dd498c367';
 
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
-  const [showSkip, setShowSkip] = useState(false);
   const fadingRef = useRef(false);
   const isMobile = window.innerWidth <= 768;
   const videoId = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
@@ -94,12 +93,24 @@ function IntroSplash({ onFinished }) {
   };
 
   useEffect(() => {
-    const skipTimer = setTimeout(() => setShowSkip(true), 3000);
-    // Fallback auto-dismiss after 60 s in case video is long
+    // Fallback auto-dismiss after 60 s in case postMessage never fires
     const fallback = setTimeout(() => dismiss(), 60000);
+
+    // Gumlet broadcasts postMessage when the video ends — catch it and fade out
+    const handleMessage = (e) => {
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        // Gumlet fires { event: 'ended' } or { type: 'ended' }
+        if (data && (data.event === 'ended' || data.type === 'ended')) {
+          dismiss();
+        }
+      } catch (_) {}
+    };
+    window.addEventListener('message', handleMessage);
+
     return () => {
-      clearTimeout(skipTimer);
       clearTimeout(fallback);
+      window.removeEventListener('message', handleMessage);
     };
   }, []);
 
@@ -113,16 +124,6 @@ function IntroSplash({ onFinished }) {
         allowFullScreen
         title="Intro"
       />
-      <button
-        className={`intro-skip ${showSkip ? 'intro-skip--visible' : ''}`}
-        onClick={dismiss}
-        aria-label="Skip intro"
-      >
-        Skip
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
     </div>
   );
 }
