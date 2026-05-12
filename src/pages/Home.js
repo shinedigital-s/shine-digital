@@ -87,42 +87,22 @@ function useReveal(threshold = 0.15) {
      • After 1 000 ms, begins a 900 ms opacity fade.
      • Fully unmounts at 1 900 ms total — no tap/click interaction.
 ═══════════════════════════════════════════════════════════════════════ */
+// Set this to your exact video length in ms (e.g. 4s video = 4000)
+const INTRO_DURATION_MS = 4000;
+
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
-  const dismissedRef        = useRef(false);
-  const isMobile            = window.innerWidth <= 768;
-  const videoId             = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
-
-  const dismiss = () => {
-    if (dismissedRef.current) return;
-    dismissedRef.current = true;
-    // 1 second delay after video ends, then fade
-    setTimeout(() => {
-      setFading(true);
-      // wait for the 0.9s CSS fade to finish before unmounting
-      setTimeout(() => onFinished(), 950);
-    }, 1000);
-  };
+  const isMobile = window.innerWidth <= 768;
+  const videoId  = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
 
   useEffect(() => {
-    // Listen for Gumlet's "ended" postMessage
-    const handleMessage = (e) => {
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        if (!data) return;
-        const evt =
-          data.event                         ||
-          data.type                          ||
-          data.name                          ||
-          (data.player && data.player.event) ||
-          (data.data   && data.data.event)   || '';
-        if (['ended', 'player:ended', 'video:ended', 'complete', 'finish'].includes(evt)) {
-          dismiss();
-        }
-      } catch (_) {}
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    const startFade = setTimeout(() => {
+      setFading(true);
+      // unmount after the 0.9s CSS fade finishes
+      setTimeout(() => onFinished(), 950);
+    }, INTRO_DURATION_MS + 1000); // video duration + 1s pause
+
+    return () => clearTimeout(startFade);
   }, []);
 
   return (
