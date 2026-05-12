@@ -147,7 +147,7 @@
   .hero__mobile-wrap {
     display: block;
     /* Top padding = navbar height (64 px) + breathing room (8 px) */
-    padding-top: 72px;
+    padding-top: 82px;
   }
 }
 
