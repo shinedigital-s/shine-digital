@@ -89,17 +89,40 @@ function useReveal(threshold = 0.15) {
 ═══════════════════════════════════════════════════════════════════════ */
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
-  const isMobile = window.innerWidth <= 768;
-  const videoId  = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
+  const dismissedRef        = useRef(false);
+  const isMobile            = window.innerWidth <= 768;
+  const videoId             = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
+
+  const dismiss = () => {
+    if (dismissedRef.current) return;
+    dismissedRef.current = true;
+    // 1 second delay after video ends, then fade
+    setTimeout(() => {
+      setFading(true);
+      // wait for the 0.9s CSS fade to finish before unmounting
+      setTimeout(() => onFinished(), 950);
+    }, 1000);
+  };
 
   useEffect(() => {
-    const startFade = setTimeout(() => setFading(true),  1000);       // 1 s pause
-    const unmount   = setTimeout(() => onFinished(),      1000 + 900); // after fade
-
-    return () => {
-      clearTimeout(startFade);
-      clearTimeout(unmount);
+    // Listen for Gumlet's "ended" postMessage
+    const handleMessage = (e) => {
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (!data) return;
+        const evt =
+          data.event                         ||
+          data.type                          ||
+          data.name                          ||
+          (data.player && data.player.event) ||
+          (data.data   && data.data.event)   || '';
+        if (['ended', 'player:ended', 'video:ended', 'complete', 'finish'].includes(evt)) {
+          dismiss();
+        }
+      } catch (_) {}
     };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   return (
