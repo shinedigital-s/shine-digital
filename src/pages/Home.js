@@ -171,16 +171,13 @@ function AboutSection() {
         <p className="section-label">About Us</p>
 
         <h2 className="about-section__heading">
-          Every brand has<br />
-          its own <em>light</em> —<br />
-          our job is to make<br />
-          it <em>shine brighter.</em>
+          We Make Brands Shine
         </h2>
 
         <p className="about-section__body">
           We are a Mumbai-based digital marketing agency built by young,
           passionate creators and strategists. From storytelling to strategy,
-          from design to data — we bring together creativity and performance
+          from design to data we bring together creativity and performance
           to help businesses stand out in today's competitive marketplace.
         </p>
 
@@ -219,7 +216,7 @@ const SERVICES = [
   },
   {
     num: '02', title: 'Branding',
-    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice — every element built to last.',
+    desc: 'Identity systems that give your brand clarity, character, and recognition. Logos, typography, tone of voice every element built to last.',
     tags: ['Identity', 'Typography', 'Voice'],
     videoId: '69f75eef1dfaccdc957d3387',
   },

@@ -29,7 +29,6 @@ export default function Footer() {
             <ul>
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/blog">Blog</Link></li>
-              <li><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></li>
               <li><a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a></li>
             </ul>
           </div>
