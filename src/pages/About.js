@@ -126,7 +126,8 @@ export default function About() {
         <div className="about-hero__inner">
           <p className="section-label">About Shine Digital</p>
           <h1 className="about-hero__title">
-            <span>Every Brand Has a Story. <br>We Help It Shine.</span>
+            <span>Every Brand Has a Story. </span>
+            <em>We Help It Shine.</em>
           </h1>
           <p className="about-hero__sub">
             Shine Digital is a Mumbai based digital marketing and brand
