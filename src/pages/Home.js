@@ -4,55 +4,50 @@ import collage from '../assets/collage.png';
 import './Home.css';
 
 /* ─── Logo imports ─────────────────────────────────────────────────────── */
-import boehringer    from '../assets/logos/boehringer-ingelheim.svg';
-import britannia     from '../assets/logos/britannia-industries-logo.svg';
-import cadbury       from '../assets/logos/cadbury.svg';
-import cipla         from '../assets/logos/cipla-logo.svg';
-import drReddys      from '../assets/logos/dr.reddys.png';
-import generalMotors from '../assets/logos/general-motors.svg';
+import boehringer     from '../assets/logos/boehringer-ingelheim.svg';
+import britannia      from '../assets/logos/britannia-industries-logo.svg';
+import cadbury        from '../assets/logos/cadbury.svg';
+import cipla          from '../assets/logos/cipla-logo.svg';
+import drReddys       from '../assets/logos/dr.reddys.png';
+import generalMotors  from '../assets/logos/general-motors.svg';
 import hindustanTimes from '../assets/logos/hindustan-times.png';
-import iball         from '../assets/logos/iball.png';
-import indiaToday    from '../assets/logos/india-today.png';
-import kelloggs      from '../assets/logos/kellogg-s.svg';
-import maggi         from '../assets/logos/maggi.png';
-import mahindra      from '../assets/logos/mahindra-mahindra-logo.svg';
-import novartis      from '../assets/logos/novartis.svg';
-import shell         from '../assets/logos/shell-4.svg';
-import sbi           from '../assets/logos/state-bank-of-india.svg';
-import surfExcel     from '../assets/logos/surf excel.png';
+import iball          from '../assets/logos/iball.png';
+import indiaToday     from '../assets/logos/india-today.png';
+import kelloggs       from '../assets/logos/kellogg-s.svg';
+import maggi          from '../assets/logos/maggi.png';
+import mahindra       from '../assets/logos/mahindra-mahindra-logo.svg';
+import novartis       from '../assets/logos/novartis.svg';
+import shell          from '../assets/logos/shell-4.svg';
+import sbi            from '../assets/logos/state-bank-of-india.svg';
+import surfExcel      from '../assets/logos/surf excel.png';
 
 const BRANDS = [
-  { name: 'Maggi',              src: maggi         },
-  { name: 'Cadbury',            src: cadbury       },
-  { name: "Kellogg's",          src: kelloggs      },
-  { name: 'Britannia',          src: britannia     },
-  { name: 'Surf Excel',         src: surfExcel     },
-  { name: 'General Motors',     src: generalMotors },
-  { name: 'Mahindra',           src: mahindra      },
-  { name: "Dr. Reddy's",        src: drReddys      },
-  { name: 'Cipla',              src: cipla         },
-  { name: 'Novartis',           src: novartis      },
-  { name: 'Boehringer Ingelheim', src: boehringer  },
-  { name: 'SBI',                src: sbi           },
-  { name: 'India Today',        src: indiaToday    },
-  { name: 'Hindustan Times',    src: hindustanTimes},
-  { name: 'iBall',              src: iball         },
-  { name: 'Shell',              src: shell         },
+  { name: 'Maggi',                src: maggi          },
+  { name: 'Cadbury',              src: cadbury        },
+  { name: "Kellogg's",            src: kelloggs       },
+  { name: 'Britannia',            src: britannia      },
+  { name: 'Surf Excel',           src: surfExcel      },
+  { name: 'General Motors',       src: generalMotors  },
+  { name: 'Mahindra',             src: mahindra       },
+  { name: "Dr. Reddy's",          src: drReddys       },
+  { name: 'Cipla',                src: cipla          },
+  { name: 'Novartis',             src: novartis       },
+  { name: 'Boehringer Ingelheim', src: boehringer     },
+  { name: 'SBI',                  src: sbi            },
+  { name: 'India Today',          src: indiaToday     },
+  { name: 'Hindustan Times',      src: hindustanTimes },
+  { name: 'iBall',                src: iball          },
+  { name: 'Shell',                src: shell          },
 ];
 
 /* ── Video IDs ── */
 const MOBILE_INTRO_VIDEO_ID  = '69f50596c530a8d6d2d84952';
 const DESKTOP_INTRO_VIDEO_ID = '69fb70b1c24b7e4dd498c367';
 
-/* How many ms to wait before auto-dismissing the intro as a fallback.
-   Set this to your actual video duration + ~1 500 ms buffer. */
-const INTRO_FALLBACK_MS = 12000;
-
 /* ═══════════════════════════════════════════════════════════════════════
    HOOKS
 ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── Lenis Smooth Scroll ── */
 function useLenis() {
   useEffect(() => {
     let lenis;
@@ -69,7 +64,6 @@ function useLenis() {
   }, []);
 }
 
-/* ── Reveal on scroll ── */
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -88,54 +82,28 @@ function useReveal(threshold = 0.15) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    INTRO SPLASH
+   Behaviour:
+     • Mounts and plays the Gumlet video immediately.
+     • After 1 000 ms, begins a 900 ms opacity fade.
+     • Fully unmounts at 1 900 ms total — no tap/click interaction.
 ═══════════════════════════════════════════════════════════════════════ */
 function IntroSplash({ onFinished }) {
-  const [fading, setFading]   = useState(false);
-  const dismissedRef          = useRef(false);
-  const isMobile              = window.innerWidth <= 768;
-  const videoId               = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
-
-  const dismiss = () => {
-    if (dismissedRef.current) return;
-    dismissedRef.current = true;
-    setFading(true);
-    /* Wait for the CSS opacity transition (0.9 s) then fully unmount */
-    setTimeout(() => onFinished(), 950);
-  };
+  const [fading, setFading] = useState(false);
+  const isMobile = window.innerWidth <= 768;
+  const videoId  = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
 
   useEffect(() => {
-    /* 1 ── Gumlet postMessage "ended" — covers every known event shape */
-    const handleMessage = (e) => {
-      try {
-        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-        if (!data) return;
-        const evt =
-          data.event                          ||
-          data.type                           ||
-          data.name                           ||
-          (data.player && data.player.event)  ||
-          (data.data   && data.data.event)    || '';
-        if (['ended', 'player:ended', 'video:ended', 'complete', 'finish'].includes(evt)) {
-          dismiss();
-        }
-      } catch (_) {}
-    };
-    window.addEventListener('message', handleMessage);
-
-    /* 2 ── Hard fallback — auto-dismiss after INTRO_FALLBACK_MS */
-    const fallback = setTimeout(dismiss, INTRO_FALLBACK_MS);
+    const startFade = setTimeout(() => setFading(true),  1000);       // 1 s pause
+    const unmount   = setTimeout(() => onFinished(),      1000 + 900); // after fade
 
     return () => {
-      window.removeEventListener('message', handleMessage);
-      clearTimeout(fallback);
+      clearTimeout(startFade);
+      clearTimeout(unmount);
     };
   }, []);
 
   return (
-    <div
-      className={`intro-splash${fading ? ' intro-splash--fade' : ''}`}
-      onClick={dismiss}          /* tap / click anywhere also skips */
-    >
+    <div className={`intro-splash${fading ? ' intro-splash--fade' : ''}`}>
       <iframe
         className="intro-splash__iframe"
         src={`https://play.gumlet.io/embed/${videoId}?autoplay=true&loop=false&muted=false&disable_player_controls=true&background=false`}
@@ -165,11 +133,15 @@ function Hero() {
         />
       </div>
 
-      {/* Mobile */}
+      {/* Mobile — padding-top is handled in CSS to clear the fixed navbar */}
       <div className="hero__mobile-wrap">
         <div className="hero__mobile-bg">
           <iframe
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', display: 'block' }}
+            style={{
+              position: 'absolute', inset: 0,
+              width: '100%', height: '100%',
+              border: 'none', display: 'block',
+            }}
             loading="lazy"
             title="Hero Mobile"
             src="https://play.gumlet.io/embed/69f50596c530a8d6d2d84950?background=false&autoplay=true&loop=true&muted=false&disable_player_controls=true"
@@ -192,7 +164,6 @@ function AboutSection() {
 
   return (
     <section className={`about-section${visible ? ' revealed' : ''}`} ref={ref}>
-      {/* ── Left: copy ── */}
       <div className="about-section__left">
         <p className="section-label">About Us</p>
 
@@ -219,7 +190,6 @@ function AboutSection() {
         </Link>
       </div>
 
-      {/* ── Right: image ── */}
       <div className="about-section__right">
         <div className="about-section__img-wrap">
           <img
@@ -266,8 +236,8 @@ const SERVICES = [
 
 function ServicesSection() {
   const [activeIdx, setActiveIdx] = useState(0);
-  const sectionRef  = useRef(null);
-  const cardRefs    = useRef([]);
+  const sectionRef = useRef(null);
+  const cardRefs   = useRef([]);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -287,7 +257,7 @@ function ServicesSection() {
         <h2 className="svc-section__title">Our <em>Services</em></h2>
       </div>
 
-      {/* ── Desktop layout ── */}
+      {/* Desktop */}
       <div className="svc-section__inner">
         <div className="svc-left">
           <div className="svc-left__card">
@@ -344,7 +314,7 @@ function ServicesSection() {
         </div>
       </div>
 
-      {/* ── Mobile layout ── */}
+      {/* Mobile */}
       <div className="svc-mobile">
         {SERVICES.map((s, i) => (
           <div key={i} className="svc-mobile__item">
@@ -419,17 +389,11 @@ export default function Home() {
 
   return (
     <div className="home">
-      {/*
-        Hero (and every other section) renders immediately underneath the splash.
-        The splash is position:fixed z-index:9999 so it covers everything.
-        When it fades to opacity:0, the hero beneath becomes visible.
-      */}
       <Hero />
       <AboutSection />
       <ServicesSection />
       <BrandsSection />
 
-      {/* Mounted on top; removed from DOM only after the fade-out finishes */}
       {showIntro && (
         <IntroSplash onFinished={() => setShowIntro(false)} />
       )}

@@ -46,7 +46,8 @@
 
 
 /* ========================================================================
-   INTRO SPLASH  —  cinematic full-screen cover
+   INTRO SPLASH
+   Timeline: mount → 1 000 ms pause → 900 ms opacity fade → unmount
 ======================================================================== */
 
 @keyframes introFadeIn {
@@ -61,22 +62,15 @@
   background: #000;
   overflow: hidden;
   animation: introFadeIn 0.5s ease both;
-
-  /*
-   * The JS dismiss() sets opacity:0 via this transition,
-   * then onFinished() unmounts the element after 950 ms.
-   */
   transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: auto;
-  cursor: pointer; /* hints the user they can tap to skip */
+  /* No cursor change — no tap interaction */
+  pointer-events: none;
 }
 
 .intro-splash--fade {
   opacity: 0;
-  pointer-events: none; /* pass clicks straight through to the hero */
 }
 
-/* ── Iframe: fills screen cover-style ── */
 .intro-splash__iframe {
   position: absolute;
   inset: 0;
@@ -84,7 +78,7 @@
   height: 100%;
   border: none;
   display: block;
-  pointer-events: none; /* clicks bubble up to the wrapper dismiss handler */
+  pointer-events: none;
 }
 
 
@@ -97,6 +91,7 @@
   background: #000;
 }
 
+/* ── Desktop ── */
 .hero__gumlet--desktop {
   position: relative;
   width: 100%;
@@ -112,6 +107,9 @@
   display: block;
 }
 
+/* ── Mobile wrapper ──
+   padding-top clears the fixed navbar so the video isn't cut off.
+   Adjust the value to match your navbar height if it differs.       */
 .hero__mobile-wrap {
   display: none;
   width: 100%;
@@ -148,6 +146,8 @@
 
   .hero__mobile-wrap {
     display: block;
+    /* Top padding = navbar height (64 px) + breathing room (8 px) */
+    padding-top: 72px;
   }
 }
 
@@ -160,11 +160,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 5rem;
   align-items: center;
-  padding: 7rem 5rem 7rem 5rem;
+  padding: 7rem 5rem;
   max-width: 1400px;
   margin: 0 auto;
 
-  /* Scroll-reveal: starts invisible, slides up */
   opacity: 0;
   transform: translateY(50px);
   transition: opacity 0.9s ease, transform 0.9s ease;
@@ -209,10 +208,6 @@
   max-width: 460px;
 }
 
-.about-section__cta {
-  /* inherits .btn-outline */
-}
-
 /* ── Right image ── */
 .about-section__right {
   width: 100%;
@@ -241,7 +236,6 @@
   transform: scale(1.03);
 }
 
-/* ── Responsive ── */
 @media (max-width: 1024px) {
   .about-section {
     gap: 3.5rem;
@@ -250,15 +244,12 @@
 }
 
 @media (max-width: 768px) {
+  /* Stack: copy on top, image below — no reorder needed (DOM order is correct) */
   .about-section {
-    /* Stack: copy on top, image below */
     grid-template-columns: 1fr;
     gap: 2.5rem;
     padding: 4rem 1.5rem;
   }
-
-  /* On mobile the DOM order (left then right) already gives us
-     copy on top, image below — no reordering needed. */
 
   .about-section__body {
     max-width: 100%;
@@ -307,7 +298,6 @@
   align-items: start;
 }
 
-/* ── Sticky left panel ── */
 .svc-left {
   position: sticky;
   top: 0;
@@ -404,7 +394,6 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
-/* ── Scrolling right cards ── */
 .svc-right {
   display: flex;
   flex-direction: column;
@@ -419,8 +408,8 @@
   opacity: 0.25;
   transform: translateY(20px);
   transition:
-    opacity   0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity    0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform  0.6s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.6s ease;
   overflow: hidden;
 }
@@ -536,7 +525,6 @@
   transform: translateX(6px);
 }
 
-/* ── Responsive ── */
 @media (max-width: 1024px) {
   .svc-section__inner {
     grid-template-columns: 1fr;
@@ -757,7 +745,6 @@
   padding: 0 3rem;
 }
 
-/* ── Marquee ── */
 .brands-marquee {
   width: 100%;
   overflow: hidden;
@@ -803,7 +790,6 @@
   100% { transform: translateX(-50%); }
 }
 
-/* ── Logo card ── */
 .brand-logo-card {
   flex-shrink: 0;
   width: 160px;
