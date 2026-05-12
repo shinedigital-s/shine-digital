@@ -76,11 +76,15 @@ function useReveal(threshold = 0.15) {
 }
 
 /* ── Intro Splash ── */
+const MOBILE_INTRO_VIDEO_ID = '69f50596c530a8d6d2d84952';
+const DESKTOP_INTRO_VIDEO_ID = '69fb70b1c24b7e4dd498c367';
+
 function IntroSplash({ onFinished }) {
   const [fading, setFading] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const fadingRef = useRef(false);
-  const videoRef = useRef(null);
+  const isMobile = window.innerWidth <= 768;
+  const videoId = isMobile ? MOBILE_INTRO_VIDEO_ID : DESKTOP_INTRO_VIDEO_ID;
 
   const dismiss = () => {
     if (fadingRef.current) return;
@@ -91,11 +95,8 @@ function IntroSplash({ onFinished }) {
 
   useEffect(() => {
     const skipTimer = setTimeout(() => setShowSkip(true), 3000);
-    const fallback = setTimeout(() => dismiss(), 30000);
-    // Programmatic play — required on some mobile browsers
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => setShowSkip(true));
-    }
+    // Fallback auto-dismiss after 60 s in case video is long
+    const fallback = setTimeout(() => dismiss(), 60000);
     return () => {
       clearTimeout(skipTimer);
       clearTimeout(fallback);
@@ -104,15 +105,13 @@ function IntroSplash({ onFinished }) {
 
   return (
     <div className={`intro-splash ${fading ? 'intro-splash--fade' : ''}`}>
-      {/* Local video — autoPlay+muted+playsInline = guaranteed autoplay everywhere */}
-      <video
-        ref={videoRef}
-        className="intro-splash__video"
-        src={introVideo}
-        autoPlay
-        muted
-        playsInline
-        onEnded={dismiss}
+      {/* Gumlet iframe — autoplay with audio on, no player controls */}
+      <iframe
+        className="intro-splash__iframe"
+        src={`https://play.gumlet.io/embed/${videoId}?autoplay=true&loop=false&muted=false&disable_player_controls=true&background=false`}
+        allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+        allowFullScreen
+        title="Intro"
       />
       <button
         className={`intro-skip ${showSkip ? 'intro-skip--visible' : ''}`}
