@@ -104,13 +104,137 @@ function MarqueeBar() {
   );
 }
 
+/* ─── Bento MV Section ──────────────────────────── */
+function BentoMVSection({ mvRef, mvVisible }) {
+  const [flipped, setFlipped] = useState({ vision: false, mission: false });
+
+  const toggle = (key) => (e) => {
+    e.stopPropagation();
+    setFlipped(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  return (
+    <section
+      className={`bento-mv-section ${mvVisible ? 'revealed' : ''}`}
+      ref={mvRef}
+    >
+      <div className="bento-grid">
+
+        {/* ── Vision Card ── */}
+        <div
+          className={`bento-card bento-card--vision ${flipped.vision ? 'flipped' : ''}`}
+          onClick={toggle('vision')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && toggle('vision')(e)}
+          aria-label="Our Vision – tap to reveal"
+        >
+          <div className="bento-card__inner">
+            {/* Front */}
+            <div className="bento-card__face bento-card__front">
+              <div className="bento-card__front-top">
+                <p className="bento-front-label">Our Vision</p>
+                <h2 className="bento-front-keyword">
+                  Strong &amp;<br />
+                  Recognizable<br />
+                  Brands.
+                </h2>
+                <p className="bento-front-teaser">
+                  Building digital presence that commands trust and lasting value.
+                </p>
+              </div>
+              <span className="bento-tap-hint">
+                <span className="bento-tap-hint__icon">↗</span>
+                Tap to reveal
+              </span>
+            </div>
+            {/* Back */}
+            <div className="bento-card__face bento-card__back">
+              <p className="bento-back-label">Our Vision</p>
+              <p className="bento-back-body">
+                To help businesses grow into{' '}
+                <em>strong and recognizable brands</em> in the digital world —
+                creating digital experiences that build trust, credibility,
+                and long-term value.
+              </p>
+              <span className="bento-close-hint" onClick={toggle('vision')}>
+                ↙ Close
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Accent Card 1 ── */}
+        <div className="bento-card bento-card--acct1">
+          <div className="bento-accent-face">
+            <span className="bento-accent-big">MUM<br />BAI</span>
+            <span className="bento-accent-label">Based In</span>
+          </div>
+        </div>
+
+        {/* ── Accent Card 2 ── */}
+        <div className="bento-card bento-card--acct2">
+          <div className="bento-accent-face">
+            <span className="bento-accent-big">✦</span>
+            <span className="bento-accent-label">Brand First</span>
+          </div>
+        </div>
+
+        {/* ── Mission Card ── */}
+        <div
+          className={`bento-card bento-card--mission ${flipped.mission ? 'flipped' : ''}`}
+          onClick={toggle('mission')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && toggle('mission')(e)}
+          aria-label="Our Mission – tap to reveal"
+        >
+          <div className="bento-card__inner">
+            {/* Front */}
+            <div className="bento-card__face bento-card__front">
+              <div className="bento-card__front-top">
+                <p className="bento-front-label">Our Mission</p>
+                <h2 className="bento-front-keyword">
+                  Sustainable<br />
+                  Growth.
+                </h2>
+                <p className="bento-front-teaser">
+                  Strategy, creativity, and technology working as one force.
+                </p>
+              </div>
+              <span className="bento-tap-hint">
+                <span className="bento-tap-hint__icon">↗</span>
+                Tap to reveal
+              </span>
+            </div>
+            {/* Back */}
+            <div className="bento-card__face bento-card__back">
+              <p className="bento-back-label">Our Mission</p>
+              <p className="bento-back-body">
+                To support businesses through thoughtful strategy, creative
+                execution, and effective digital marketing — combining design,
+                technology, and communication to{' '}
+                <em>achieve sustainable growth.</em>
+              </p>
+              <span className="bento-close-hint" onClick={toggle('mission')}>
+                ↙ Close
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 /* ─── About Page ────────────────────────────────── */
 export default function About() {
   useLenis();
 
   const [heroRef, heroVisible] = useReveal(0.1);
   const [introRef, introVisible] = useReveal();
-  const [mvRef, mvVisible] = useReveal();
+  const [mvRef, mvVisible] = useReveal(0.1);
   const [perspectiveRef, perspectiveVisible] = useReveal();
   const [whatRef, whatVisible] = useReveal();
   const [foundersRef, foundersVisible] = useReveal();
@@ -122,7 +246,10 @@ export default function About() {
       <CursorGlow />
 
       {/* ── Hero ── */}
-      <section className={`about-hero ${heroVisible ? 'revealed' : ''}`} ref={heroRef}>
+      <section
+        className={`about-hero ${heroVisible ? 'revealed' : ''}`}
+        ref={heroRef}
+      >
         <div className="about-hero__inner">
           <p className="section-label">About Shine Digital</p>
           <h1 className="about-hero__title">
@@ -165,25 +292,8 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Mission / Vision ── */}
-      <section className={`mv-section ${mvVisible ? 'revealed' : ''}`} ref={mvRef}>
-        <div className="mv-card">
-          <p className="section-label">Our Vision</p>
-          <h2>
-            To help businesses grow into <em>strong and recognizable brands</em> in
-            the digital world creating digital experiences that build
-            trust, credibility, and long term value.
-          </h2>
-        </div>
-        <div className="mv-card mv-card--vision">
-          <p className="section-label">Our Mission</p>
-          <h2>
-            To support businesses through thoughtful strategy, creative
-            execution, and effective digital marketing combining design,
-            technology, and communication to <em>achieve sustainable growth.</em>
-          </h2>
-        </div>
-      </section>
+      {/* ── Bento Mission / Vision ── */}
+      <BentoMVSection mvRef={mvRef} mvVisible={mvVisible} />
 
       {/* ── Perspective ── */}
       <section
@@ -199,7 +309,7 @@ export default function About() {
           <p className="perspective-section__body">
             When a brand has clarity in its identity, message, and purpose,
             every digital effort becomes more meaningful. We look beyond
-            individual campaigns or platforms our focus is on shaping a
+            individual campaigns or platforms — our focus is on shaping a
             brand's overall presence so that every website, piece of content,
             and marketing effort works together to create a clear and
             lasting impression.
@@ -210,7 +320,10 @@ export default function About() {
       <MarqueeBar />
 
       {/* ── About Visual Block ── */}
-      <section className={`about-visual-section ${whatVisible ? 'revealed' : ''}`} ref={whatRef}>
+      <section
+        className={`about-visual-section ${whatVisible ? 'revealed' : ''}`}
+        ref={whatRef}
+      >
         <div className="about-visual__left">
           <p className="section-label">What We Do</p>
           <h2 className="about-visual__heading">
@@ -234,7 +347,10 @@ export default function About() {
       </section>
 
       {/* ── Founders ── */}
-      <section className={`founders-section ${foundersVisible ? 'revealed' : ''}`} ref={foundersRef}>
+      <section
+        className={`founders-section ${foundersVisible ? 'revealed' : ''}`}
+        ref={foundersRef}
+      >
         <p className="section-label">The Minds Behind It</p>
         <h2 className="founders-section__heading">Our Founders</h2>
         <div className="founders-grid">
@@ -246,8 +362,8 @@ export default function About() {
             },
             {
               name: 'Savin Tuscano',
-              role: 'Co-Founder',
-              bio: 'Savin Tuscano is an experienced Director, Writer, and Producer with a strong and diverse background in the entertainment industry.',
+              role: 'Founder, Shine Digital',
+              bio: 'Savin Tuscano is a filmmaker, writer, producer, and founder of Shine Digital based in Mumbai. With a strong background in storytelling, digital media, and creative marketing, he has worked across films, branded content, and advertising campaigns. His passion lies in building impactful narratives that connect brands with audiences authentically. Known for his creative vision and people-driven approach, Savin blends cinematic storytelling with modern digital strategy. Through Shine Digital, he continues to help businesses and creators grow their presence in the digital space.',
             },
           ].map((f, i) => (
             <div key={i} className="founder-card" style={{ '--i': i }}>
