@@ -1,4 +1,4 @@
-/* ─── Page Shell ──────────────────────────────────────────────── */
+/* ── Base ────────────────────────────────────────────────────── */
 .portfolio-page {
   padding-top: 80px;
   background: #080808;
@@ -6,225 +6,278 @@
   font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
-/* ─── Header ──────────────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────────────── */
 .pf-header {
   text-align: center;
-  padding: 4rem 1.5rem 3rem;
+  padding: 4.5rem 1.5rem 3rem;
 }
 
 .pf-eyebrow {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: #c8a96e;
-  margin-bottom: 1rem;
   border: 1px solid rgba(200, 169, 110, 0.35);
   border-radius: 100px;
   padding: 0.3rem 1.1rem;
+  margin-bottom: 1.1rem;
 }
 
 .pf-title {
   font-size: clamp(2.4rem, 6vw, 5rem);
   font-weight: 800;
-  color: #fff;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  margin: 0 0 1.2rem;
-  background: linear-gradient(135deg, #ffffff 30%, #c8a96e 100%);
+  margin: 0 0 1rem;
+  background: linear-gradient(135deg, #fff 40%, #c8a96e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .pf-subtitle {
-  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 520px;
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 480px;
   margin: 0 auto;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
-/* ─── Bento Grid ──────────────────────────────────────────────── */
-.bento-grid {
+/* ── Grid ───────────────────────────────────────────────────── */
+/*
+  All images are 1080 × 2220 px → aspect ratio ≈ 0.487 (portrait).
+  We use a 5-column masonry-style grid where every cell respects
+  the native portrait ratio via padding-top trick.
+  "hero" cells span 2 columns but still portrait (taller).
+*/
+.pf-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: 220px;
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
   padding: 0 2rem 5rem;
-  max-width: 1500px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Size variants */
-.bento-normal {
-  grid-column: span 4;
-  grid-row: span 1;
-}
-
-.bento-wide {
-  grid-column: span 8;
-  grid-row: span 1;
-}
-
-.bento-tall {
-  grid-column: span 4;
-  grid-row: span 2;
-}
-
-/* ─── Cells ───────────────────────────────────────────────────── */
-.bento-cell {
+/* ── Cells ──────────────────────────────────────────────────── */
+.pf-cell {
   position: relative;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   background: #111;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
-              border-color 0.35s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  /* Entrance animation – starts hidden */
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  transition:
+    opacity  0.55s ease,
+    transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
 }
 
-.bento-cell:hover {
-  transform: scale(1.025);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(200, 169, 110, 0.3);
-  border-color: rgba(200, 169, 110, 0.4);
+.pf-cell.pf-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Hero cells: 2-column width */
+.pf-hero {
+  grid-column: span 2;
+}
+
+.pf-cell:hover {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75),
+              0 0 0 1.5px rgba(200, 169, 110, 0.45);
+  border-color: rgba(200, 169, 110, 0.35);
   z-index: 2;
 }
 
-.bento-cell img {
+/* ── Image wrapper — preserves 1080:2220 portrait ratio ─────── */
+/*  padding-top = (height / width) × 100 = (2220/1080) × 100 ≈ 205.56%  */
+.pf-img-wrap {
+  position: relative;
+  width: 100%;
+  padding-top: 205.56%;   /* locks the portrait ratio regardless of cell width */
+  overflow: hidden;
+}
+
+.pf-img-wrap img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   display: block;
   transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1),
               filter 0.35s ease;
-  filter: brightness(0.92) saturate(1.05);
+  filter: brightness(0.9) saturate(1.05);
+  will-change: transform;
 }
 
-.bento-cell:hover img {
-  transform: scale(1.07);
+.pf-cell:hover .pf-img-wrap img {
+  transform: scale(1.055);
   filter: brightness(1) saturate(1.1);
 }
 
-/* ─── Overlay ─────────────────────────────────────────────────── */
-.bento-overlay {
+/* ── Overlay ────────────────────────────────────────────────── */
+.pf-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0) 50%,
-    rgba(0, 0, 0, 0.55) 100%
+    transparent 45%,
+    rgba(0, 0, 0, 0.6) 100%
   );
-  opacity: 0;
-  transition: opacity 0.35s ease;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.bento-cell:hover .bento-overlay {
+.pf-cell:hover .pf-overlay {
   opacity: 1;
 }
 
-.bento-zoom {
-  width: 48px;
-  height: 48px;
+.pf-overlay-icon {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(200, 169, 110, 0.9);
+  background: rgba(200, 169, 110, 0.92);
   color: #000;
-  font-size: 1.4rem;
-  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: scale(0.6);
+  transform: scale(0.65) rotate(-15deg);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  backdrop-filter: blur(4px);
+  flex-shrink: 0;
 }
 
-.bento-cell:hover .bento-zoom {
-  transform: scale(1);
+.pf-cell:hover .pf-overlay-icon {
+  transform: scale(1) rotate(0deg);
 }
 
-/* ─── Lightbox ────────────────────────────────────────────────── */
-.pf-lightbox {
+/* ── Lightbox ───────────────────────────────────────────────── */
+.pf-lb-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, 0.92);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  animation: lb-in 0.25s ease;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  animation: lb-fade 0.2s ease;
 }
 
-@keyframes lb-in {
+@keyframes lb-fade {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-.pf-lightbox img {
-  max-width: 90vw;
+.pf-lb-img-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pf-lb-img-wrap img {
   max-height: 88vh;
-  border-radius: 12px;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9);
+  max-width: 80vw;
+  width: auto;
+  border-radius: 10px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85);
+  animation: lb-pop 0.28s cubic-bezier(0.23, 1, 0.32, 1);
   object-fit: contain;
-  animation: lb-img-in 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  display: block;
 }
 
-@keyframes lb-img-in {
-  from { transform: scale(0.88); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+@keyframes lb-pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
-.pf-lb-close {
-  position: fixed;
-  top: 1.25rem;
-  right: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 1.1rem;
-  width: 42px;
-  height: 42px;
+.pf-lb-counter {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.1em;
+}
+
+.pf-lb-nav {
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.pf-lb-nav:hover {
+  background: rgba(200, 169, 110, 0.85);
+  border-color: #c8a96e;
+  color: #000;
+}
+
+.pf-lb-close {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.4rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.25s;
 }
 
 .pf-lb-close:hover {
-  background: rgba(200, 169, 110, 0.8);
+  background: rgba(200, 169, 110, 0.85);
+  color: #000;
   transform: rotate(90deg);
 }
 
-/* ─── Responsive ──────────────────────────────────────────────── */
+/* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .bento-grid {
-    grid-template-columns: repeat(8, 1fr);
-    grid-auto-rows: 200px;
-  }
-
-  .bento-wide {
-    grid-column: span 8;
-  }
-
-  .bento-tall {
-    grid-column: span 4;
-  }
-
-  .bento-normal {
-    grid-column: span 4;
+  .pf-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
+  .pf-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 1.25rem 4rem;
+  }
+
+  .pf-hero {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 540px) {
   .portfolio-page {
     padding-top: 70px;
   }
@@ -233,23 +286,17 @@
     padding: 3rem 1.25rem 2rem;
   }
 
-  .bento-grid {
+  .pf-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 175px;
-    gap: 8px;
-    padding: 0 1rem 4rem;
+    gap: 7px;
+    padding: 0 0.9rem 3.5rem;
   }
 
-  .bento-wide,
-  .bento-tall,
-  .bento-normal {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-
-  /* Give first image a full-width hero feel */
-  .bento-cell:first-child {
+  .pf-hero {
     grid-column: span 2;
-    grid-row: span 1;
+  }
+
+  .pf-lb-img-wrap img {
+    max-width: 95vw;
   }
 }
