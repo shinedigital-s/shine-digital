@@ -7,7 +7,8 @@ import founder2 from '../assets/founder (2).jpeg';
 function useLenis() {
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js';
+    script.src =
+      'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js';
     script.onload = () => {
       const lenis = new window.Lenis({
         duration: 1.4,
@@ -15,13 +16,16 @@ function useLenis() {
         smooth: true,
         smoothTouch: false,
       });
-      const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+      const raf = time => {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      };
       requestAnimationFrame(raf);
       window.__lenis = lenis;
     };
     document.head.appendChild(script);
     return () => {
-      if (window.__lenis) { window.__lenis.destroy(); }
+      if (window.__lenis) window.__lenis.destroy();
     };
   }, []);
 }
@@ -34,7 +38,12 @@ function useReveal(threshold = 0.15) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
       { threshold }
     );
     obs.observe(el);
@@ -43,40 +52,11 @@ function useReveal(threshold = 0.15) {
   return [ref, visible];
 }
 
-/* ─── Scramble text hook ────────────────────────── */
-function useScramble(text, trigger, duration = 1000) {
-  const [display, setDisplay] = useState(text);
-  const chars = '!@#$%^&*<>?/abcdefghijklmnopqrstuvwxyz';
-  useEffect(() => {
-    if (!trigger) return;
-    let frame = 0;
-    const totalFrames = Math.floor(duration / 30);
-    const interval = setInterval(() => {
-      frame++;
-      const progress = frame / totalFrames;
-      setDisplay(
-        text.split('').map((char, i) => {
-          if (char === ' ') return ' ';
-          const revealAt = i / text.length;
-          if (progress > revealAt) return char;
-          return chars[Math.floor(Math.random() * chars.length)];
-        }).join('')
-      );
-      if (frame >= totalFrames) {
-        setDisplay(text);
-        clearInterval(interval);
-      }
-    }, 30);
-    return () => clearInterval(interval);
-  }, [trigger]);
-  return display;
-}
-
-/* ─── Cursor glow ───────────────────────────────── */
+/* ─── Cursor Glow ───────────────────────────────── */
 function CursorGlow() {
   const glowRef = useRef(null);
   useEffect(() => {
-    const move = (e) => {
+    const move = e => {
       if (glowRef.current) {
         glowRef.current.style.left = e.clientX + 'px';
         glowRef.current.style.top = e.clientY + 'px';
@@ -90,7 +70,9 @@ function CursorGlow() {
 
 /* ─── Marquee Bar ───────────────────────────────── */
 function MarqueeBar() {
-  const items = ['Strategy', 'Branding', 'Marketing', 'Design', 'Digital', 'Growth', 'Clarity'];
+  const items = [
+    'Strategy', 'Branding', 'Marketing', 'Design', 'Digital', 'Growth', 'Clarity',
+  ];
   const doubled = [...items, ...items, ...items, ...items];
   return (
     <div className="marquee-bar">
@@ -106,127 +88,169 @@ function MarqueeBar() {
   );
 }
 
-/* ─── Bento MV Section ──────────────────────────── */
-function BentoMVSection({ mvRef, mvVisible }) {
-  const [flipped, setFlipped] = useState({ vision: false, mission: false });
+/* ─── Tile data ─────────────────────────────────── */
+const VISION_TILES = [
+  { word: 'BRAND', cols: 2 },
+  { word: 'DIGITAL', cols: 1 },
+  { word: 'PRESENCE', cols: 1 },
+  { word: 'TRUST', cols: 1 },
+  { word: 'MUMBAI', cols: 1, faded: true },
+  { word: 'IDENTITY', cols: 2 },
+  { word: 'CLARITY', cols: 3 },
+  { word: 'STORY', cols: 1 },
+  { word: 'IMPACT', cols: 1 },
+  { word: 'SHINE', cols: 2 },
+  { word: 'VALUE', cols: 1 },
+];
 
-  const toggle = (key) => (e) => {
-    e.stopPropagation();
-    setFlipped(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+const MISSION_TILES = [
+  { word: 'STRATEGY', cols: 2 },
+  { word: 'GROWTH', cols: 1 },
+  { word: 'CONTENT', cols: 1 },
+  { word: 'SOCIAL', cols: 1 },
+  { word: 'DESIGN', cols: 1, faded: true },
+  { word: 'CAMPAIGNS', cols: 2 },
+  { word: 'REACH', cols: 3 },
+  { word: 'RESULTS', cols: 1 },
+  { word: 'ENGAGE', cols: 1 },
+  { word: 'CONVERT', cols: 2 },
+  { word: 'SCALE', cols: 1 },
+];
+
+/* ─── Bento Reveal Block ────────────────────────── */
+function BentoRevealBlock({ type }) {
+  const [revealed, setRevealed] = useState(false);
+
+  const tiles = type === 'vision' ? VISION_TILES : MISSION_TILES;
+  const label = type === 'vision' ? 'Our Vision' : 'Our Mission';
+  const btnText = type === 'vision'
+    ? 'TAP TO REVEAL OUR VISION'
+    : 'TAP TO REVEAL OUR MISSION';
 
   return (
+    <div className={`bento-reveal-block${revealed ? ' is-revealed' : ''}`}>
+
+      {/* ── Tiles + reveal cta ── */}
+      <div className="bento-tiles-wrapper">
+        <div className="bento-tiles-grid">
+          {tiles.map((tile, i) => (
+            <div
+              key={i}
+              className={`bento-tile${tile.faded ? ' bento-tile--faded' : ''}`}
+              style={{ '--i': i, '--cols': tile.cols }}
+            >
+              {tile.word}
+            </div>
+          ))}
+        </div>
+
+        <button className="bento-reveal-btn" onClick={() => setRevealed(true)}>
+          <span className="bento-reveal-btn__arrow">↓</span>
+          {btnText}
+        </button>
+      </div>
+
+      {/* ── Revealed statement ── */}
+      <div className="bento-reveal-content">
+        <div className="bento-reveal-content__inner">
+          <p className="bento-rl-label">{label}</p>
+
+          {type === 'vision' ? (
+            <p className="bento-rl-body">
+              To help businesses grow into{' '}
+              <em>strong and recognizable brands</em> in the digital world —
+              creating digital experiences that build trust, credibility, and
+              long-term value.
+            </p>
+          ) : (
+            <p className="bento-rl-body">
+              To support businesses through thoughtful strategy, creative
+              execution, and effective digital marketing — combining design,
+              technology, and communication to{' '}
+              <em>achieve sustainable growth.</em>
+            </p>
+          )}
+
+          <button
+            className="bento-collapse-btn"
+            onClick={() => setRevealed(false)}
+          >
+            ↑ Collapse
+          </button>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+/* ─── Bento MV Section ──────────────────────────── */
+function BentoMVSection({ mvRef, mvVisible }) {
+  return (
     <section
-      className={`bento-mv-section ${mvVisible ? 'revealed' : ''}`}
+      className={`bento-mv-section${mvVisible ? ' revealed' : ''}`}
       ref={mvRef}
     >
-      <div className="bento-grid">
-
-        {/* ── Vision Card ── */}
-        <div
-          className={`bento-card bento-card--vision ${flipped.vision ? 'flipped' : ''}`}
-          onClick={toggle('vision')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && toggle('vision')(e)}
-          aria-label="Our Vision – tap to reveal"
-        >
-          <div className="bento-card__inner">
-            {/* Front */}
-            <div className="bento-card__face bento-card__front">
-              <div className="bento-card__front-top">
-                <p className="bento-front-label">Our Vision</p>
-                <h2 className="bento-front-keyword">
-                  Strong &amp;<br />
-                  Recognizable<br />
-                  Brands.
-                </h2>
-                <p className="bento-front-teaser">
-                  Building digital presence that commands trust and lasting value.
-                </p>
-              </div>
-              <span className="bento-tap-hint">
-                <span className="bento-tap-hint__icon">↗</span>
-                Tap to reveal
-              </span>
-            </div>
-            {/* Back */}
-            <div className="bento-card__face bento-card__back">
-              <p className="bento-back-label">Our Vision</p>
-              <p className="bento-back-body">
-                To help businesses grow into{' '}
-                <em>strong and recognizable brands</em> in the digital world —
-                creating digital experiences that build trust, credibility,
-                and long-term value.
-              </p>
-              <span className="bento-close-hint" onClick={toggle('vision')}>
-                ↙ Close
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Accent Card 1 ── */}
-        <div className="bento-card bento-card--acct1">
-          <div className="bento-accent-face">
-            <span className="bento-accent-big">MUM<br />BAI</span>
-            <span className="bento-accent-label">Based In</span>
-          </div>
-        </div>
-
-        {/* ── Accent Card 2 ── */}
-        <div className="bento-card bento-card--acct2">
-          <div className="bento-accent-face">
-            <span className="bento-accent-big">✦</span>
-            <span className="bento-accent-label">Brand First</span>
-          </div>
-        </div>
-
-        {/* ── Mission Card ── */}
-        <div
-          className={`bento-card bento-card--mission ${flipped.mission ? 'flipped' : ''}`}
-          onClick={toggle('mission')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && toggle('mission')(e)}
-          aria-label="Our Mission – tap to reveal"
-        >
-          <div className="bento-card__inner">
-            {/* Front */}
-            <div className="bento-card__face bento-card__front">
-              <div className="bento-card__front-top">
-                <p className="bento-front-label">Our Mission</p>
-                <h2 className="bento-front-keyword">
-                  Sustainable<br />
-                  Growth.
-                </h2>
-                <p className="bento-front-teaser">
-                  Strategy, creativity, and technology working as one force.
-                </p>
-              </div>
-              <span className="bento-tap-hint">
-                <span className="bento-tap-hint__icon">↗</span>
-                Tap to reveal
-              </span>
-            </div>
-            {/* Back */}
-            <div className="bento-card__face bento-card__back">
-              <p className="bento-back-label">Our Mission</p>
-              <p className="bento-back-body">
-                To support businesses through thoughtful strategy, creative
-                execution, and effective digital marketing — combining design,
-                technology, and communication to{' '}
-                <em>achieve sustainable growth.</em>
-              </p>
-              <span className="bento-close-hint" onClick={toggle('mission')}>
-                ↙ Close
-              </span>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <BentoRevealBlock type="vision" />
+      <div className="bento-mv-sep" />
+      <BentoRevealBlock type="mission" />
     </section>
+  );
+}
+
+/* ─── Founder Card ──────────────────────────────── */
+function FounderCard({ founder, index }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="founder-card" style={{ '--i': index }}>
+      <div className="founder-card__photo">
+        <img
+          src={founder.photo}
+          alt={founder.name}
+          className="founder-card__photo-img"
+        />
+      </div>
+      <div className="founder-card__info">
+        <div className="founder-card__name-row">
+          <h3>{founder.name}</h3>
+          {founder.linkedin && (
+            <a
+              href={founder.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="founder-linkedin"
+              aria-label={`${founder.name} on LinkedIn`}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              </svg>
+            </a>
+          )}
+        </div>
+        <p className="founder-card__role">{founder.role}</p>
+        <div className="founder-card__bio-wrap">
+          <p className="founder-card__bio">
+            {founder.bioShort}
+            {founder.bioExtra && (
+              <span
+                className={`founder-card__bio-extra${expanded ? ' expanded' : ''}`}
+              >
+                {' '}{founder.bioExtra}
+              </span>
+            )}
+          </p>
+          {founder.bioExtra && (
+            <button
+              className="founder-read-more"
+              onClick={() => setExpanded(p => !p)}
+            >
+              {expanded ? 'Read less ↑' : 'Read more ↓'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -237,11 +261,28 @@ export default function About() {
   const [heroRef, heroVisible] = useReveal(0.1);
   const [introRef, introVisible] = useReveal();
   const [mvRef, mvVisible] = useReveal(0.1);
-  const [perspectiveRef, perspectiveVisible] = useReveal();
+  const [perspRef, perspVisible] = useReveal();
   const [whatRef, whatVisible] = useReveal();
   const [foundersRef, foundersVisible] = useReveal();
 
-  const scrambled = useScramble('stand out.', heroVisible, 1100);
+  const founders = [
+    {
+      name: 'Krisha Mehta',
+      role: 'Co-Founder & Managing Director',
+      bioShort: "Krisha Mehta is a marketing professional with a Master's degree from London and a refined background in business and fashion.",
+      bioExtra: null,
+      photo: founder1,
+      linkedin: 'https://www.linkedin.com/in/krisha-mehta-5056861a5',
+    },
+    {
+      name: 'Savin Tuscano',
+      role: 'Founder, Shine Digital',
+      bioShort: 'Savin Tuscano is a filmmaker, writer, producer, and founder of Shine Digital based in Mumbai.',
+      bioExtra: 'With a strong background in storytelling, digital media, and creative marketing, he has worked across films, branded content, and advertising campaigns. His passion lies in building impactful narratives that connect brands with audiences authentically. Known for his creative vision and people-driven approach, Savin blends cinematic storytelling with modern digital strategy. Through Shine Digital, he continues to help businesses and creators grow their presence in the digital space.',
+      photo: founder2,
+      linkedin: 'https://www.linkedin.com/in/savin-tuscano-20593b30',
+    },
+  ];
 
   return (
     <div className="about-page">
@@ -249,7 +290,7 @@ export default function About() {
 
       {/* ── Hero ── */}
       <section
-        className={`about-hero ${heroVisible ? 'revealed' : ''}`}
+        className={`about-hero${heroVisible ? ' revealed' : ''}`}
         ref={heroRef}
       >
         <div className="about-hero__inner">
@@ -259,33 +300,32 @@ export default function About() {
             <em>We Help It Shine.</em>
           </h1>
           <p className="about-hero__sub">
-            Shine Digital is a Mumbai based digital marketing and brand
-            strategy agency focused on helping businesses grow with
-            clarity and purpose.
+            Shine Digital is a Mumbai based digital marketing and brand strategy
+            agency focused on helping businesses grow with clarity and purpose.
           </p>
         </div>
       </section>
 
       <MarqueeBar />
 
-      {/* ── Intro Statement ── */}
+      {/* ── Intro ── */}
       <section
-        className={`about-intro-section ${introVisible ? 'revealed' : ''}`}
+        className={`about-intro-section${introVisible ? ' revealed' : ''}`}
         ref={introRef}
       >
         <div className="about-intro-section__inner">
           <p className="about-intro-section__lead">
-            In today's crowded digital landscape, many brands are active
-            but not memorable. Content is created, ads are run, and platforms
-            are used, but the brand itself often lacks a clear identity.
+            In today's crowded digital landscape, many brands are active but not
+            memorable. Content is created, ads are run, and platforms are used,
+            but the brand itself often lacks a clear identity.
           </p>
           <p className="about-intro-section__lead">
             At Shine Digital, our work begins by solving that problem.
           </p>
           <p className="about-intro-section__lead">
             We help businesses define what they stand for, shape how they
-            communicate, and build a digital presence that people recognize
-            and trust.
+            communicate, and build a digital presence that people recognize and
+            trust.
           </p>
           <h3 className="about-intro-section__pull">
             Our role is not just to run marketing campaigns.<br />
@@ -294,13 +334,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Bento Mission / Vision ── */}
+      {/* ── Bento Vision / Mission ── */}
       <BentoMVSection mvRef={mvRef} mvVisible={mvVisible} />
 
       {/* ── Perspective ── */}
       <section
-        className={`perspective-section ${perspectiveVisible ? 'revealed' : ''}`}
-        ref={perspectiveRef}
+        className={`perspective-section${perspVisible ? ' revealed' : ''}`}
+        ref={perspRef}
       >
         <div className="perspective-section__inner">
           <p className="section-label">Our Perspective</p>
@@ -309,21 +349,20 @@ export default function About() {
             building a <em>strong brand.</em>
           </h2>
           <p className="perspective-section__body">
-            When a brand has clarity in its identity, message, and purpose,
-            every digital effort becomes more meaningful. We look beyond
-            individual campaigns or platforms — our focus is on shaping a
-            brand's overall presence so that every website, piece of content,
-            and marketing effort works together to create a clear and
-            lasting impression.
+            When a brand has clarity in its identity, message, and purpose, every
+            digital effort becomes more meaningful. We look beyond individual
+            campaigns or platforms — our focus is on shaping a brand's overall
+            presence so that every website, piece of content, and marketing effort
+            works together to create a clear and lasting impression.
           </p>
         </div>
       </section>
 
       <MarqueeBar />
 
-      {/* ── About Visual Block ── */}
+      {/* ── What We Do ── */}
       <section
-        className={`about-visual-section ${whatVisible ? 'revealed' : ''}`}
+        className={`about-visual-section${whatVisible ? ' revealed' : ''}`}
         ref={whatRef}
       >
         <div className="about-visual__left">
@@ -332,8 +371,8 @@ export default function About() {
             We help brands<br />grow.
           </h2>
           <p className="about-visual__sub">
-            Through strategy, marketing, design, and digital experiences
-            we build brands that people recognize, trust, and remember.
+            Through strategy, marketing, design, and digital experiences we build
+            brands that people recognize, trust, and remember.
           </p>
         </div>
         <div className="about-visual__right">
@@ -350,40 +389,14 @@ export default function About() {
 
       {/* ── Founders ── */}
       <section
-        className={`founders-section ${foundersVisible ? 'revealed' : ''}`}
+        className={`founders-section${foundersVisible ? ' revealed' : ''}`}
         ref={foundersRef}
       >
         <p className="section-label">The Minds Behind It</p>
         <h2 className="founders-section__heading">Our Founders</h2>
         <div className="founders-grid">
-          {[
-            {
-              name: 'Krisha Mehta',
-              role: 'Co-Founder & Managing Director',
-              bio: "Krisha Mehta is a marketing professional with a Master's degree from London and a refined background in business and fashion.",
-              photo: founder1,
-            },
-            {
-              name: 'Savin Tuscano',
-              role: 'Founder, Shine Digital',
-              bio: 'Savin Tuscano is a filmmaker, writer, producer, and founder of Shine Digital based in Mumbai. With a strong background in storytelling, digital media, and creative marketing, he has worked across films, branded content, and advertising campaigns. His passion lies in building impactful narratives that connect brands with audiences authentically. Known for his creative vision and people-driven approach, Savin blends cinematic storytelling with modern digital strategy. Through Shine Digital, he continues to help businesses and creators grow their presence in the digital space.',
-              photo: founder2,
-            },
-          ].map((f, i) => (
-            <div key={i} className="founder-card" style={{ '--i': i }}>
-              <div className="founder-card__photo">
-                <img
-                  src={f.photo}
-                  alt={f.name}
-                  className="founder-card__photo-img"
-                />
-              </div>
-              <div className="founder-card__info">
-                <h3>{f.name}</h3>
-                <p className="founder-card__role">{f.role}</p>
-                <p className="founder-card__bio">{f.bio}</p>
-              </div>
-            </div>
+          {founders.map((f, i) => (
+            <FounderCard key={i} founder={f} index={i} />
           ))}
         </div>
       </section>
