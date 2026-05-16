@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './About.css';
+import founder1 from '../assets/founder (1).jpeg';
+import founder2 from '../assets/founder (2).jpeg';
 
 /* ─── Lenis smooth scroll ───────────────────────── */
 function useLenis() {
@@ -359,18 +361,22 @@ export default function About() {
               name: 'Krisha Mehta',
               role: 'Co-Founder & Managing Director',
               bio: "Krisha Mehta is a marketing professional with a Master's degree from London and a refined background in business and fashion.",
+              photo: founder1,
             },
             {
               name: 'Savin Tuscano',
               role: 'Founder, Shine Digital',
               bio: 'Savin Tuscano is a filmmaker, writer, producer, and founder of Shine Digital based in Mumbai. With a strong background in storytelling, digital media, and creative marketing, he has worked across films, branded content, and advertising campaigns. His passion lies in building impactful narratives that connect brands with audiences authentically. Known for his creative vision and people-driven approach, Savin blends cinematic storytelling with modern digital strategy. Through Shine Digital, he continues to help businesses and creators grow their presence in the digital space.',
+              photo: founder2,
             },
           ].map((f, i) => (
             <div key={i} className="founder-card" style={{ '--i': i }}>
               <div className="founder-card__photo">
-                <div className="founder-card__photo-ph">
-                  <span>{f.name.split(' ').map(n => n[0]).join('')}</span>
-                </div>
+                <img
+                  src={f.photo}
+                  alt={f.name}
+                  className="founder-card__photo-img"
+                />
               </div>
               <div className="founder-card__info">
                 <h3>{f.name}</h3>
