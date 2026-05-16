@@ -88,112 +88,123 @@ function MarqueeBar() {
   );
 }
 
-/* ─── Tile data ─────────────────────────────────── */
-const VISION_TILES = [
-  { word: 'BRAND', cols: 2 },
-  { word: 'DIGITAL', cols: 1 },
-  { word: 'PRESENCE', cols: 1 },
-  { word: 'TRUST', cols: 1 },
-  { word: 'MUMBAI', cols: 1, faded: true },
-  { word: 'IDENTITY', cols: 2 },
-  { word: 'CLARITY', cols: 3 },
-  { word: 'STORY', cols: 1 },
-  { word: 'IMPACT', cols: 1 },
-  { word: 'SHINE', cols: 2 },
-  { word: 'VALUE', cols: 1 },
-];
-
-const MISSION_TILES = [
-  { word: 'STRATEGY', cols: 2 },
-  { word: 'GROWTH', cols: 1 },
-  { word: 'CONTENT', cols: 1 },
-  { word: 'SOCIAL', cols: 1 },
-  { word: 'DESIGN', cols: 1, faded: true },
-  { word: 'CAMPAIGNS', cols: 2 },
-  { word: 'REACH', cols: 3 },
-  { word: 'RESULTS', cols: 1 },
-  { word: 'ENGAGE', cols: 1 },
-  { word: 'CONVERT', cols: 2 },
-  { word: 'SCALE', cols: 1 },
-];
-
-/* ─── Bento Reveal Block ────────────────────────── */
-function BentoRevealBlock({ type }) {
-  const [revealed, setRevealed] = useState(false);
-
-  const tiles = type === 'vision' ? VISION_TILES : MISSION_TILES;
-  const label = type === 'vision' ? 'Our Vision' : 'Our Mission';
-  const btnText = type === 'vision'
-    ? 'TAP TO REVEAL OUR VISION'
-    : 'TAP TO REVEAL OUR MISSION';
+/* ─── Generic Flip Card ─────────────────────────── */
+function FlipCard({ number, tag, frontTitle, backLabel, backBody, cueChar = '→' }) {
+  const [flipped, setFlipped] = useState(false);
 
   return (
-    <div className={`bento-reveal-block${revealed ? ' is-revealed' : ''}`}>
+    <div>
+      <div
+        className={`flip-card${flipped ? ' flipped' : ''}`}
+        onClick={() => setFlipped(f => !f)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setFlipped(f => !f)}
+        aria-label={`${tag} — click to reveal`}
+      >
+        <div className="flip-card__inner">
 
-      {/* ── Tiles + reveal cta ── */}
-      <div className="bento-tiles-wrapper">
-        <div className="bento-tiles-grid">
-          {tiles.map((tile, i) => (
-            <div
-              key={i}
-              className={`bento-tile${tile.faded ? ' bento-tile--faded' : ''}`}
-              style={{ '--i': i, '--cols': tile.cols }}
+          {/* ── Front ── */}
+          <div className="flip-card__front">
+            {number && (
+              <span className="flip-card__front-number">{number}</span>
+            )}
+            <p className="flip-card__front-tag">{tag}</p>
+            <h3
+              className="flip-card__front-title"
+              dangerouslySetInnerHTML={{ __html: frontTitle }}
+            />
+            <span className="flip-card__front-cue">{cueChar}</span>
+          </div>
+
+          {/* ── Back ── */}
+          <div className="flip-card__back">
+            <p className="flip-card__back-label">{backLabel}</p>
+            <p
+              className="flip-card__back-body"
+              dangerouslySetInnerHTML={{ __html: backBody }}
+            />
+            <button
+              className="flip-card__back-close"
+              onClick={e => { e.stopPropagation(); setFlipped(false); }}
             >
-              {tile.word}
-            </div>
-          ))}
-        </div>
+              ← Flip back
+            </button>
+          </div>
 
-        <button className="bento-reveal-btn" onClick={() => setRevealed(true)}>
-          <span className="bento-reveal-btn__arrow">↓</span>
-          {btnText}
-        </button>
-      </div>
-
-      {/* ── Revealed statement ── */}
-      <div className="bento-reveal-content">
-        <div className="bento-reveal-content__inner">
-          <p className="bento-rl-label">{label}</p>
-
-          {type === 'vision' ? (
-            <p className="bento-rl-body">
-              To help businesses grow into{' '}
-              <em>strong and recognizable brands</em> in the digital world —
-              creating digital experiences that build trust, credibility, and
-              long-term value.
-            </p>
-          ) : (
-            <p className="bento-rl-body">
-              To support businesses through thoughtful strategy, creative
-              execution, and effective digital marketing — combining design,
-              technology, and communication to{' '}
-              <em>achieve sustainable growth.</em>
-            </p>
-          )}
-
-          <button
-            className="bento-collapse-btn"
-            onClick={() => setRevealed(false)}
-          >
-            ↑ Collapse
-          </button>
         </div>
       </div>
-
+      <p className="flip-card__hint">{flipped ? 'Click to go back' : 'Click to reveal'}</p>
     </div>
   );
 }
 
-/* ─── Bento MV Section ──────────────────────────── */
-function BentoMVSection({ mvRef, mvVisible }) {
+/* ─── Vision / Mission Flip Cards Section ───────── */
+function FlipCardsSection({ fcRef, fcVisible }) {
   return (
     <section
-      className={`bento-mv-section${mvVisible ? ' revealed' : ''}`}
-      ref={mvRef}
+      className={`flip-cards-section${fcVisible ? ' revealed' : ''}`}
+      ref={fcRef}
     >
-      <BentoRevealBlock type="vision" />
-      <div className="bento-mv-sep" />
-      <BentoRevealBlock type="mission" />
+      <p className="section-label">What We Believe</p>
+      <div className="flip-cards-grid">
+        <FlipCard
+          number="01"
+          tag="Our Vision"
+          frontTitle="Every Brand<br/><em>Has a Story</em>"
+          backLabel="Our Vision"
+          backBody={`To help businesses grow into <em>strong and recognizable brands</em> in the digital world — creating digital experiences that build trust, credibility, and long-term value.`}
+        />
+        <FlipCard
+          number="02"
+          tag="Our Mission"
+          frontTitle="We Help<br/><em>It Shine</em>"
+          backLabel="Our Mission"
+          backBody={`To support businesses through thoughtful strategy, creative execution, and effective digital marketing — combining design, technology, and communication to <em>achieve sustainable growth.</em>`}
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ─── Perspective Flip Cards Section ────────────── */
+function PerspectiveFlipSection({ perspRef, perspVisible }) {
+  const cards = [
+    {
+      tag: 'Brand First',
+      frontTitle: 'Identity<br/><em>before</em> everything',
+      backLabel: 'Why brand matters',
+      backBody: `When a brand has clarity in its identity and purpose, every digital effort becomes more meaningful. We build the foundation <em>before</em> the campaign.`,
+    },
+    {
+      tag: 'Lasting Impression',
+      frontTitle: 'Beyond<br/><em>the campaign</em>',
+      backLabel: 'Our thinking',
+      backBody: `We look beyond individual campaigns or platforms. Our focus is on shaping a brand's overall presence so that every touchpoint works <em>together.</em>`,
+    },
+    {
+      tag: 'Real Growth',
+      frontTitle: 'Clarity<br/><em>drives results</em>',
+      backLabel: 'The outcome',
+      backBody: `A clear message, a consistent voice, and a purposeful presence — these aren't nice-to-haves. They're what turn <em>visibility into trust.</em>`,
+    },
+  ];
+
+  return (
+    <section
+      className={`perspective-flip-section${perspVisible ? ' revealed' : ''}`}
+      ref={perspRef}
+    >
+      <p className="section-label">Our Perspective</p>
+      <h2 className="perspective-flip-section__heading">
+        Successful marketing starts<br />
+        with a <em>strong brand.</em>
+      </h2>
+      <div className="perspective-flip-grid">
+        {cards.map((card, i) => (
+          <FlipCard key={i} {...card} cueChar="↗" />
+        ))}
+      </div>
     </section>
   );
 }
@@ -260,8 +271,8 @@ export default function About() {
 
   const [heroRef, heroVisible] = useReveal(0.1);
   const [introRef, introVisible] = useReveal();
-  const [mvRef, mvVisible] = useReveal(0.1);
-  const [perspRef, perspVisible] = useReveal();
+  const [fcRef, fcVisible] = useReveal(0.1);
+  const [perspRef, perspVisible] = useReveal(0.1);
   const [whatRef, whatVisible] = useReveal();
   const [foundersRef, foundersVisible] = useReveal();
 
@@ -334,29 +345,13 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Bento Vision / Mission ── */}
-      <BentoMVSection mvRef={mvRef} mvVisible={mvVisible} />
+      {/* ── Vision / Mission Flip Cards ── */}
+      <FlipCardsSection fcRef={fcRef} fcVisible={fcVisible} />
 
-      {/* ── Perspective ── */}
-      <section
-        className={`perspective-section${perspVisible ? ' revealed' : ''}`}
-        ref={perspRef}
-      >
-        <div className="perspective-section__inner">
-          <p className="section-label">Our Perspective</p>
-          <h2 className="perspective-section__heading">
-            Successful marketing starts with<br />
-            building a <em>strong brand.</em>
-          </h2>
-          <p className="perspective-section__body">
-            When a brand has clarity in its identity, message, and purpose, every
-            digital effort becomes more meaningful. We look beyond individual
-            campaigns or platforms — our focus is on shaping a brand's overall
-            presence so that every website, piece of content, and marketing effort
-            works together to create a clear and lasting impression.
-          </p>
-        </div>
-      </section>
+      <MarqueeBar />
+
+      {/* ── Perspective Flip Cards ── */}
+      <PerspectiveFlipSection perspRef={perspRef} perspVisible={perspVisible} />
 
       <MarqueeBar />
 

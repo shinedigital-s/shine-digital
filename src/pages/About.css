@@ -85,6 +85,7 @@
 
 .about-hero__title span {
   font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .about-hero__title em {
@@ -113,7 +114,7 @@
 .about-hero__sub {
   font-size: 1.05rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 300;
   max-width: 500px;
 }
@@ -165,9 +166,9 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-/* ─── Bento MV Section ──────────────────────────── */
-.bento-mv-section {
-  padding: 3rem 3rem 5rem;
+/* ─── Flip Cards Section (Vision / Mission) ─────── */
+.flip-cards-section {
+  padding: 4rem 3rem 6rem;
   max-width: 1400px;
   margin: 0 auto;
   opacity: 0;
@@ -175,208 +176,206 @@
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
-.bento-mv-section.revealed {
+.flip-cards-section.revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* separator between vision and mission blocks */
-.bento-mv-sep {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  margin: 2.5rem 0;
+.flip-cards-section .section-label {
+  margin-bottom: 2.5rem;
 }
 
-/* ─── Bento Reveal Block ────────────────────────── */
-.bento-reveal-block {
-  overflow: hidden;
-}
-
-/* ── Tiles wrapper (collapses when revealed) ── */
-.bento-tiles-wrapper {
-  overflow: hidden;
-  max-height: 700px;
-  opacity: 1;
-  /* when coming back from revealed: expand with slight delay (after content hides) */
-  transition:
-    max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
-    opacity 0.35s ease 0.15s;
-}
-
-.bento-reveal-block.is-revealed .bento-tiles-wrapper {
-  max-height: 0;
-  opacity: 0;
-  /* when hiding: immediate so tiles can stagger out first, wrapper collapses after */
-  transition:
-    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.48s,
-    opacity 0.35s ease 0.42s;
-}
-
-/* ── 4-col tile grid ── */
-.bento-tiles-grid {
+.flip-cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding-bottom: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
-/* ── Individual tile ── */
-.bento-tile {
-  grid-column: span var(--cols, 1);
-  padding: 1.5rem 2rem;
-  min-height: 86px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.055);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ── The card shell ── */
+.flip-card {
+  perspective: 1200px;
+  height: 420px;
+  cursor: pointer;
+}
+
+/* hint text below card */
+.flip-card__hint {
   text-align: center;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
+  margin-top: 0.75rem;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
-  /* default: visible, stagger IN from below (after collapsing back) */
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.4s ease calc(0.25s + var(--i) * 0.04s),
-    transform 0.4s ease calc(0.25s + var(--i) * 0.04s);
+  color: rgba(255, 255, 255, 0.18);
+  transition: color 0.3s ease;
+  user-select: none;
 }
 
-.bento-tile--faded {
-  color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.01);
+.flip-card:hover .flip-card__hint {
+  color: rgba(255, 255, 255, 0.38);
 }
 
-/* when revealing: tiles stagger OUT upward */
-.bento-reveal-block.is-revealed .bento-tile {
-  opacity: 0;
-  transform: translateY(-22px);
-  transition:
-    opacity 0.3s ease calc(var(--i) * 0.03s),
-    transform 0.3s ease calc(var(--i) * 0.03s);
-}
-
-/* ── Reveal CTA button ── */
-.bento-reveal-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
+.flip-card__inner {
+  position: relative;
   width: 100%;
-  padding: 1.25rem;
-  background: transparent;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.22);
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.flip-card.flipped .flip-card__inner {
+  transform: rotateY(180deg);
+}
+
+/* ── Front & Back shared ── */
+.flip-card__front,
+.flip-card__back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem 2.8rem;
+  overflow: hidden;
+}
+
+/* ── Front face ── */
+.flip-card__front {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* subtle grain texture overlay */
+.flip-card__front::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 180px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.flip-card__front-number {
+  position: absolute;
+  top: 2rem;
+  right: 2.4rem;
+  font-size: 5rem;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.04);
+  font-family: 'DM Sans', sans-serif;
+  user-select: none;
+}
+
+.flip-card__front-tag {
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: color 0.3s ease;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 1rem;
 }
 
-.bento-reveal-btn:hover {
-  color: rgba(255, 255, 255, 0.55);
+.flip-card__front-title {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--white);
 }
 
-.bento-reveal-btn__arrow {
-  display: inline-block;
-  animation: nudge-down 1.8s ease-in-out infinite;
+.flip-card__front-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
 }
 
-@keyframes nudge-down {
+.flip-card__front-cue {
+  position: absolute;
+  bottom: 2rem;
+  right: 2.4rem;
+  font-size: 1.4rem;
+  opacity: 0.2;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+  animation: float-cue 2.5s ease-in-out infinite;
+}
+
+@keyframes float-cue {
 
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateX(0);
   }
 
   50% {
-    transform: translateY(5px);
+    transform: translateX(6px);
   }
 }
 
-/* ── Revealed content (hidden by default) ── */
-.bento-reveal-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  /* when hiding (leaving revealed state): immediate */
-  transition:
-    max-height 0.35s ease 0s,
-    opacity 0.25s ease 0s;
+.flip-card:hover .flip-card__front-cue {
+  opacity: 0.55;
 }
 
-.bento-reveal-block.is-revealed .bento-reveal-content {
-  max-height: 400px;
-  opacity: 1;
-  pointer-events: all;
-  /* when showing: delayed — wait for tiles + wrapper to clear */
-  transition:
-    max-height 0.6s ease 0.9s,
-    opacity 0.5s ease 0.95s;
+/* ── Back face ── */
+.flip-card__back {
+  background: rgba(255, 255, 255, 0.038);
+  transform: rotateY(180deg);
+  justify-content: center;
+  gap: 1.5rem;
 }
 
-.bento-reveal-content__inner {
-  padding: 3.5rem 0 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.bento-rl-label {
-  font-size: 0.6rem;
+.flip-card__back-label {
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.35);
 }
 
-.bento-rl-body {
-  font-size: clamp(1rem, 1.8vw, 1.45rem);
+.flip-card__back-body {
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
   font-weight: 300;
-  line-height: 1.65;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
   letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.65);
-  max-width: 680px;
-  margin-bottom: 2.5rem;
 }
 
-.bento-rl-body em {
+.flip-card__back-body em {
   font-style: italic;
   font-weight: 700;
   color: var(--white);
 }
 
-.bento-collapse-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.28);
-  font-size: 0.58rem;
+.flip-card__back-close {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  padding: 0.6rem 1.1rem;
+  color: rgba(255, 255, 255, 0.22);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 0.2rem;
   cursor: pointer;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   font-family: 'DM Sans', sans-serif;
-  transition: color 0.3s ease, border-color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
-.bento-collapse-btn:hover {
-  color: rgba(255, 255, 255, 0.6);
-  border-color: rgba(255, 255, 255, 0.25);
+.flip-card__back-close:hover {
+  color: rgba(255, 255, 255, 0.55);
 }
 
-/* ─── Perspective Section ───────────────────────── */
-.perspective-section {
-  padding: 7rem 3rem;
+/* ─── Perspective Flip Cards Section ────────────── */
+.perspective-flip-section {
+  padding: 5rem 3rem 7rem;
   max-width: 1400px;
   margin: 0 auto;
   opacity: 0;
@@ -384,36 +383,40 @@
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
-.perspective-section.revealed {
+.perspective-flip-section.revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
-.perspective-section__inner .section-label {
-  margin-bottom: 1.5rem;
+.perspective-flip-section .section-label {
+  margin-bottom: 1rem;
 }
 
-.perspective-section__heading {
+.perspective-flip-section__heading {
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.04em;
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem;
   max-width: 700px;
 }
 
-.perspective-section__heading em {
+.perspective-flip-section__heading em {
   font-style: italic;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.5);
 }
 
-.perspective-section__body {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.4);
-  font-weight: 300;
-  max-width: 620px;
+/* 3-col grid for perspective cards */
+.perspective-flip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+/* perspective cards are shorter / more landscape-ish */
+.perspective-flip-grid .flip-card {
+  height: 300px;
 }
 
 /* ─── About Visual Section ──────────────────────── */
@@ -572,7 +575,6 @@
   margin-bottom: 0.4rem;
 }
 
-/* name + LinkedIn icon on same row */
 .founder-card__name-row {
   display: flex;
   align-items: center;
@@ -612,7 +614,6 @@
   margin-bottom: 1rem;
 }
 
-/* ── Founder bio read-more ── */
 .founder-card__bio-wrap {
   display: flex;
   flex-direction: column;
@@ -626,13 +627,11 @@
   font-weight: 300;
 }
 
-/* The extra bio text: hidden by default, revealed on expand */
 .founder-card__bio-extra {
   display: inline;
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  /* use a block context for max-height to work */
   display: inline-block;
   vertical-align: top;
   width: 100%;
@@ -713,6 +712,10 @@
   .about-visual__sub {
     max-width: 100%;
   }
+
+  .perspective-flip-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -728,23 +731,28 @@
     padding: 4rem 1.5rem;
   }
 
-  .bento-mv-section {
+  .flip-cards-section {
     padding: 2rem 1.5rem 4rem;
   }
 
-  /* 2-col tiles on mobile, all spans = 1 */
-  .bento-tiles-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .flip-cards-grid {
+    grid-template-columns: 1fr;
   }
 
-  .bento-tile {
-    grid-column: span 1 !important;
-    min-height: 72px;
-    padding: 1.1rem 1rem;
+  .flip-card {
+    height: 360px;
   }
 
-  .perspective-section {
-    padding: 5rem 1.5rem;
+  .perspective-flip-section {
+    padding: 4rem 1.5rem 5rem;
+  }
+
+  .perspective-flip-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .perspective-flip-grid .flip-card {
+    height: 280px;
   }
 
   .about-visual-section {
